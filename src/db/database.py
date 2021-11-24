@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
-database = create_engine('sqlite://', connect_args = {"check_same_thread": False})
+database = create_engine('sqlite://', connect_args = {"check_same_thread": False}, poolclass=StaticPool)
 
-databaseSession = sessionmaker(autocommit=False, autoflush=False, bind=database)
+databaseSessionMaker = sessionmaker(autocommit=False, autoflush=False, bind=database)
 
-baseModel = declarative_base()
+BaseModel = declarative_base()

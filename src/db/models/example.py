@@ -1,10 +1,8 @@
 from sqlalchemy import Column, Integer
 
-from sqlalchemy.orm import relationship
+from src.db.database import BaseModel
 
-from ..database import baseModel
-
-class Example(baseModel):
+class Example(BaseModel):
     __tablename__ = 'example_table'
 
     id = Column(Integer, primary_key=True, index=True)

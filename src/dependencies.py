@@ -1,7 +1,7 @@
-from .db.database import databaseSession
+from .db.database import databaseSessionMaker
 
 def get_db():
-    db = databaseSession()
+    db = databaseSessionMaker()
     try:
         yield db
     finally:
