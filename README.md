@@ -10,3 +10,6 @@ How to start the backend:
 
 How to run tests:
 - Type `test`, press TAB to autocomplete, then ENTER.
+
+How to run coverage test:
+- Type `coverage`, press TAB to autocomplete, then ENTER.
