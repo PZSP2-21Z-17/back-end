@@ -6,4 +6,4 @@ database = create_engine('sqlite://', connect_args = {"check_same_thread": False
 
 databaseSession = sessionmaker(autocommit=False, autoflush=False, bind=database)
 
-baseEntity = declarative_base()
+baseModel = declarative_base()
