@@ -12,6 +12,14 @@ class UserLookup(BaseUser):
     last_name: str
     e_mail: str
 
+class UserLogin(BaseSchema):
+    password: str
+    e_mail: str
+
+    @classmethod
+    def from_form(cls, e_mail: str = Form(...), password: str = Form(...)):
+        return cls(e_mail, password)
+
 class UserCreate(BaseSchema):
     password: str
     first_name: str

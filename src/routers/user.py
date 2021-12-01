@@ -1,22 +1,27 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from src.db.models import user as user_model
+from src.db.models.user import User as UserModel
 from src.dependencies import get_db
 
-from src.schemas import user as user_schema
+from src.schemas.user import *
 
 router = APIRouter()
 
-@router.post("/create/", response_model=user_schema.UserLookup)
-def create(user: user_schema.UserCreate = Depends(user_schema.UserCreate.from_form), db: Session = Depends(get_db)):
-    db_user = user_model.User(**user.dict())
+@router.post("/create/", response_model=UserLookup)
+def create(user: UserCreate = Depends(UserCreate.from_form), db: Session = Depends(get_db)):
+    db_user = UserModel(**user.dict())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
-@router.get("/lookup/{user_id}", response_model=user_schema.UserLookup)
+@router.post("/login/", response_model=UserLookup)
+def login(user: UserLogin = Depends(UserLogin.from_form), db: Session = Depends(get_db)):
+    db_user = db.query(UserModel).filter(UserModel.password == user.password).filter(UserModel.e_mail == user.e_mail).one()
+    return db_user
+
+@router.get("/lookup/{user_id}", response_model=UserLookup)
 def lookup(user_id: int, db: Session = Depends(get_db)):
-    db_user = db.query(user_model.User).filter(user_model.User.user_id == user_id).one()
+    db_user = db.query(UserModel).filter(UserModel.user_id == user_id).one()
     return db_user
