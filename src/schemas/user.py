@@ -18,7 +18,7 @@ class UserLogin(BaseSchema):
 
     @classmethod
     def from_form(cls, e_mail: str = Form(...), password: str = Form(...)):
-        return cls(e_mail, password)
+        return cls(e_mail = e_mail, password = password)
 
 class UserCreate(BaseSchema):
     password: str
@@ -28,4 +28,4 @@ class UserCreate(BaseSchema):
 
     @classmethod
     def from_form(cls, first_name: str = Form(...), last_name: str = Form(...), e_mail: str = Form(...), password: str = Form(...)):
-        return cls(first_name, last_name, e_mail, password)
+        return cls(first_name = first_name, last_name = last_name, e_mail = e_mail, password = password)
