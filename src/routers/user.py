@@ -8,8 +8,8 @@ from src.schemas.user import *
 
 router = APIRouter()
 
-@router.post("/create/", response_model=UserLookup)
-def create(user: UserCreate = Depends(UserCreate.from_form), db: Session = Depends(get_db)):
+@router.post("/register/", response_model=UserLookup)
+def register(user: UserCreate = Depends(UserCreate.from_form), db: Session = Depends(get_db)):
     db_user = UserModel(**user.dict())
     db.add(db_user)
     db.commit()
