@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from .routers import index, user
 from .db.models import *
 from .db.database import BaseModel, database
+from .routers import index, user
 
 BaseModel.metadata.create_all(bind=database)
 
