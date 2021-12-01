@@ -21,7 +21,7 @@ class Exam(BaseModel):
     date_of_exam    = Column(DateTime, nullable=False),
     commentary      = Column(String(100)),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     groups              = relationship("Group")
 
 class Group(BaseModel):
@@ -31,7 +31,7 @@ class Group(BaseModel):
     code_subject    = Column(String(5), ForeignKey('exam.code_subject'), primary_key=True, nullable=False),
     nr_user         = Column(Integer(3), ForeignKey('exam.nr_user'), primary_key=True, nullable=False),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     task_affiliations   = relationship("TaskAffiliation")
 
 class Answer(BaseModel):
@@ -46,7 +46,7 @@ class Subject(BaseModel):
     code_subject    = Column(String(5), primary_key=True, nullable=False),
     name            = Column(String(40), nullable=False, unique=True),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     exams               = relationship("Exam"),
     user_affiliations   = relationship("UserAffiliation")
 
@@ -69,7 +69,7 @@ class UserAffiliation(BaseModel):
     code_subject    = Column(String(5), ForeignKey('subject.code_subject'), primary_key=True, nullable=False),
     nr_user         = Column(Integer(3), ForeignKey('user.nr_user'), primary_key=True, nullable=False),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     tasks               = relationship("Task")
 
 class Task(BaseModel):
@@ -82,7 +82,7 @@ class Task(BaseModel):
     date_creation   = Column(DateTime, nullable=False),
     is_visible      = Column(String(1), nullable=False),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     answers             = relationship("Answer"),
     task_affiliations   = relationship("TaskAffiliation"),
     tag_affiliation     = relationship("TagAffiliation")
@@ -92,7 +92,7 @@ class Tag(BaseModel):
     code_tag        = Column(String(5), primary_key=True, nullable=False),
     name            = Column(String(20), nullable=False, unique=True),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     tag_affiliations    = relationship("TagAffiliation")
 
 class User(BaseModel):
@@ -103,7 +103,7 @@ class User(BaseModel):
     password        = Column(String(40), nullable=False),
     e_mail          = Column(String(50), nullable=False, unique=True),
 
-    # Ongoing relationships from this tabel to tabel:
+    # Ongoing relationships from this table to table:
     exams               = relationship("Exam"),
     user_affiliations   = relationship("UserAffiliation")
 
