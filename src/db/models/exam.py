@@ -1,17 +1,20 @@
 from sqlalchemy import Column
-from sqlalchemy.orm import relation, relationship
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.functions import user
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import DateTime, Numeric, Text
+from sqlalchemy.sql.sqltypes import DateTime, Integer, Text
 
 from src.db.database import BaseModel
 
 class Exam(BaseModel):
     __tablename__   = 'exam'
-    exam_nr         = Column(Numeric(5), primary_key=True, nullable=False)
-    subject_code    = Column(Text(5), ForeignKey('subject.subject_code'), primary_key=True, nullable=False)
-    user_nr         = Column(Numeric(3), ForeignKey('user.user_nr'), nullable=False)
+    # Main fields
+    exam_id         = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     date_of_exam    = Column(DateTime, nullable=False)
     commentary      = Column(Text(100))
-
-    # Ongoing relationships from this table to table:
-    groups              = relationship("Group")
+    # Parents
+    subject_code    = Column(Text(5), ForeignKey('subject.subject_code'), nullable=False)
+    subject         = relationship("Subject")
+    
+    author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
+    author          = relationship("User")

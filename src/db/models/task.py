@@ -1,21 +1,21 @@
 from sqlalchemy import Column
-from sqlalchemy.orm import relation, relationship
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import DateTime, Numeric, Text
+from sqlalchemy.sql.sqltypes import DateTime, Integer, Text, Numeric
 
 from src.db.database import BaseModel
 
 class Task(BaseModel):
     __tablename__   = 'task'
-    task_id         = Column(Numeric(5), primary_key=True, nullable=False)
-    subject_code    = Column(Text(5), ForeignKey('user_affiliation.subject_code'), nullable=False)
-    user_nr         = Column(Numeric(3), ForeignKey('user_affiliation.user_nr'), nullable=False)
+    # Main fields
+    task_id         = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     contents        = Column(Text(500), nullable=False)
-    score           = Column(Numeric(2), nullable=False)
+    score           = Column(Integer, nullable=False)
     date_creation   = Column(DateTime, nullable=False)
     is_visible      = Column(Text(1), nullable=False)
-
-    # Ongoing relationships from this table to table:
-    answers             = relationship("Answer")
-    task_affiliations   = relationship("TaskAffiliation")
-    tag_affiliation     = relationship("TagAffiliation")
+    # Parents
+    subject_code    = Column(Text(5), ForeignKey('subject.subject_code'), nullable=False)
+    user_aff        = relationship("Subject")
+    
+    author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
+    author          = relationship("User")

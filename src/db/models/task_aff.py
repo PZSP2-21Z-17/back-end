@@ -1,15 +1,18 @@
 from sqlalchemy import Column
-from sqlalchemy.orm import relation, relationship
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Numeric, Text
+from sqlalchemy.sql.sqltypes import Integer, Numeric, Text
 
 from src.db.database import BaseModel
 
 class TaskAffiliation(BaseModel):
     __tablename__   = "task_affiliation"
-    nr_on_sheet     = Column(Numeric(5), nullable=False)
-    task_id         = Column(Numeric(5), ForeignKey('task.task_id'), primary_key=True, nullable=False)
-    exam_nr         = Column(Numeric(5), ForeignKey('group.exam_nr'), primary_key=True, nullable=False)
-    subject_code    = Column(Text(5), ForeignKey('group.subject_code'), primary_key=True, nullable=False)
-    group_nr        = Column(Numeric(5), ForeignKey('group.group_nr'), primary_key=True, nullable=False)
-    user_nr         = Column(Numeric(3), ForeignKey('group.user_nr'), primary_key=True, nullable=False)
+    # Main fields
+    nr_on_sheet     = Column(Integer, nullable=False)
+    # Parents
+    group_nr        = Column(Integer, ForeignKey('group.group_nr'), primary_key=True, nullable=False)
+    exam_id         = Column(Integer, ForeignKey('group.exam_id'), primary_key=True, nullable=False)
+    group           = relationship("Group", foreign_keys=[group_nr, exam_id], primaryjoin="and_(Group.group_nr == TaskAffiliation.group_nr, Group.exam_id == TaskAffiliation.exam_id)")
+    
+    task_id         = Column(Integer, ForeignKey('task.task_id'), primary_key=True, nullable=False)
+    task            = relationship("Task")

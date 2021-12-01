@@ -2,7 +2,7 @@ from pydantic import BaseModel as BaseSchema
 from fastapi import Form
 
 class BaseUser(BaseSchema):
-    nr_user: int
+    user_id: int
 
     class Config:
         orm_mode = True

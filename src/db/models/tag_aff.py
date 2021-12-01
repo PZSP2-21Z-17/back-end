@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Integer
-from sqlalchemy.orm import relation, relationship, relationships
-from sqlalchemy.sql.expression import null
+from sqlalchemy import Column
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Numeric, Text
+from sqlalchemy.sql.sqltypes import Integer, Numeric, Text
 
 from src.db.database import BaseModel
 
 class TagAffiliation(BaseModel):
     __tablename__   = 'tag_affiliation'
-    task_id         = Column(Numeric(5), ForeignKey('task.task_id'), primary_key=True, nullable=False)
+    # Main fields
+    task_id         = Column(Integer, ForeignKey('task.task_id'), primary_key=True, nullable=False)
     tag_code        = Column(Text(5), ForeignKey('tag.tag_code'), primary_key=True, nullable=False)
