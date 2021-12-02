@@ -1,12 +1,12 @@
 from pydantic import BaseModel as BaseSchema
 
-class BaseUser(BaseSchema):
+class UserBase(BaseSchema):
     user_id: int
 
     class Config:
         orm_mode = True
 
-class UserLookup(BaseUser):
+class UserLookup(UserBase):
     first_name: str
     last_name: str
     e_mail: str
