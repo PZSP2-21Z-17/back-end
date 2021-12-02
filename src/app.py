@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .db.models import *
 from .db.database import BaseModel, database
 from .db import dummy
-from .routers import index, user
+from .routers import index, user, group
 
 BaseModel.metadata.create_all(bind=database)
 dummy.fill()
@@ -12,6 +12,7 @@ dummy.fill()
 app = FastAPI()
 app.include_router(index.router)
 app.include_router(user.router, prefix="/user")
+app.include_router(group.router, prefix="/group")
 
 app.add_middleware(
     CORSMiddleware,

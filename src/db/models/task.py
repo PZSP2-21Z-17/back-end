@@ -15,7 +15,7 @@ class Task(BaseModel):
     is_visible      = Column(Text(1), nullable=False)
     # Parents
     subject_code    = Column(Text(5), ForeignKey('subject.subject_code'), nullable=False)
-    user_aff        = relationship("Subject")
+    subject         = relationship("Subject")
     
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
     author          = relationship("User")
