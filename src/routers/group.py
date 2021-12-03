@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.db.models.group import Group as GroupModel
@@ -11,7 +11,11 @@ router = APIRouter()
 @router.post("/create/", response_model=GroupBase)
 def create(group: GroupBase, db: Session = Depends(get_db)):
     db_group = GroupModel(**group.dict())
-    db.add(db_group)
-    db.commit()
-    db.refresh(db_group)
+    try:
+        db.add(db_group)
+        db.commit()
+        db.refresh(db_group)
+    except:
+        db.rollback()
+        return HTTPException()
     return db_group
