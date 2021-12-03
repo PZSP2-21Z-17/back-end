@@ -12,7 +12,9 @@ class TaskAffiliation(BaseModel):
     # Parents
     group_nr        = Column(Integer, ForeignKey('group.group_nr'), primary_key=True, nullable=False)
     exam_id         = Column(Integer, ForeignKey('group.exam_id'), primary_key=True, nullable=False)
-    group           = relationship("Group", foreign_keys=[group_nr, exam_id], primaryjoin="and_(Group.group_nr == TaskAffiliation.group_nr, Group.exam_id == TaskAffiliation.exam_id)")
+    groups          = relationship("Group", foreign_keys=[group_nr, exam_id], primaryjoin="and_(Group.group_nr == TaskAffiliation.group_nr, Group.exam_id == TaskAffiliation.exam_id)", back_populates='task_affs')
     
     task_id         = Column(Integer, ForeignKey('task.task_id'), primary_key=True, nullable=False)
-    task            = relationship("Task")
+    tasks           = relationship("Task", back_populates='task_affs')
+
+    

@@ -12,9 +12,13 @@ class Exam(BaseModel):
     exam_id         = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     date_of_exam    = Column(DateTime, nullable=False)
     commentary      = Column(Text(100))
+
     # Parents
     subject_code    = Column(Text(5), ForeignKey('subject.subject_code'), nullable=False)
-    subject         = relationship("Subject")
-    
+    subjects        = relationship("Subject", back_populates='exams')
+
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
-    author          = relationship("User")
+    users         = relationship("User", back_populates='exams')
+
+    # Children
+    groups          = relationship("Group", back_populates='exams')

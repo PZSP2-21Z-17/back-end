@@ -1,4 +1,5 @@
 from sqlalchemy import Column
+from sqlalchemy.orm import relation, relationship
 from sqlalchemy.sql.sqltypes import Integer, Text
 
 from src.db.database import BaseModel
@@ -11,3 +12,8 @@ class User(BaseModel):
     last_name       = Column(Text(25), nullable=False)
     password        = Column(Text(40), nullable=False)
     e_mail          = Column(Text(50), nullable=False, unique=True)
+
+    # Children 
+    user_affs       = relationship("UserAffiliation", back_populates='users')
+    exams           = relationship("Exam", back_populates='users')
+    tasks           = relationship("Task", back_populates='users')
