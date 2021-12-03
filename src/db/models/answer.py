@@ -10,7 +10,8 @@ class Answer(BaseModel):
     # Main fields
     answer_id       = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     content         = Column(Text(500), nullable=False)
-    is_correct      = Column(Text(1), nullable=False)   # Właściwie tutaj to string czy bool?
+    is_correct      = Column(Text(1), nullable=False)
+
     # Parents
     task_id         = Column(Integer, ForeignKey('task.task_id'), nullable=False)
-    task            = relationship("Task")
+    tasks            = relationship("Task", back_populates='answers')
