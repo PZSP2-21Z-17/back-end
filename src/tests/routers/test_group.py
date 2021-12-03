@@ -1,9 +1,6 @@
 from fastapi.testclient import TestClient
-from src.dependencies import get_db
-from sqlalchemy.orm import Session
-from fastapi import Depends
 
-def test_create(client: TestClient, db: Session = Depends(get_db)):
+def test_create(client: TestClient):
     data = {
         'group_nr': 5,
         'exam_id': 1,

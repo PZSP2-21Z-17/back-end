@@ -9,7 +9,7 @@ from src.schemas.group import *
 router = APIRouter()
 
 @router.post("/create/", response_model=GroupBase)
-def register(group: GroupBase, db: Session = Depends(get_db)):
+def create(group: GroupBase, db: Session = Depends(get_db)):
     db_group = GroupModel(**group.dict())
     db.add(db_group)
     db.commit()

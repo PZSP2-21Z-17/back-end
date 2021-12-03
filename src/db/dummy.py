@@ -9,6 +9,7 @@ from .models.exam import Exam as ExamModel
 from .models.group import Group as GroupModel
 from .models.task import Task as TaskModel
 from .models.answer import Answer as AnswerModel
+from .models.tag import Tag as TagModel
 
 from datetime import datetime
 from random import randint, random
@@ -88,6 +89,21 @@ def fill():
     for d in data:
         db_answer = AnswerModel(**dict(zip(fields, d)))
         db.add(db_answer)
+    # Tags
+    fields = ['tag_code', 'name']
+    data = [
+        ['A', 'abc'],
+        ['B', 'bcd'],
+        ['C', 'cde'],
+        ['D', 'def'],
+        ['E', 'efg'],
+        ['F', 'fgh'],
+        ['G', 'ghi'],
+        ['H', 'hij'],
+    ]
+    for d in data:
+        db_tag = TagModel(**dict(zip(fields, d)))
+        db.add(db_tag)
     # Enough.
     db.commit()
     db.close()

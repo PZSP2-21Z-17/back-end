@@ -1,9 +1,6 @@
 from fastapi.testclient import TestClient
-from src.dependencies import get_db
-from sqlalchemy.orm import Session
-from fastapi import Depends
 
-def test_login(client: TestClient, db: Session = Depends(get_db)):
+def test_login(client: TestClient):
     data = {
         'e_mail': 'bartek@gmail.com',
         'password': 'Bartek',
@@ -11,7 +8,7 @@ def test_login(client: TestClient, db: Session = Depends(get_db)):
     response = client.post("/user/login/", json=data)
     assert response.status_code == 200
 
-def test_register(client: TestClient, db: Session = Depends(get_db)):
+def test_register(client: TestClient):
     data = {
         'e_mail': 'unique@email.com',
         'password': 'balbinka',
@@ -25,6 +22,6 @@ def test_register(client: TestClient, db: Session = Depends(get_db)):
         assert json[key] == data[key]
     assert json.get('user_id') is not None
 
-def test_lookup(client: TestClient, db: Session = Depends(get_db)):
+def test_lookup(client: TestClient):
     response = client.get("/user/lookup/1")
     assert response.status_code == 200
