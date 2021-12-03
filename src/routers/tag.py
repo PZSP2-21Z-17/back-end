@@ -26,7 +26,6 @@ def all(db: Session = Depends(get_db)):
     try:
         db_tags = db.query(TagModel).all()
     except:
-        db.rollback()
         return HTTPException()
     return db_tags
 
@@ -34,7 +33,9 @@ def all(db: Session = Depends(get_db)):
 def delete(tag: TagBase, db: Session = Depends(get_db)):
     try:
         db.query(TagModel).filter(TagModel.tag_code == tag.tag_code).delete()
+        db.commit()
     except:
+        db.rollback()
         return HTTPException()
     return
 
