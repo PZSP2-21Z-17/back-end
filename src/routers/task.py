@@ -29,3 +29,12 @@ def all(db: Session = Depends(get_db)):
         print(error)
         return HTTPException(status_code=404)
     return db_task
+
+@router.get("/one/{task_id}", response_model=TaskSchema)
+def one(task_id: int, db: Session = Depends(get_db)):
+    try:
+        db_task = db.query(TaskModel).filter(TaskModel.task_id == task_id).one()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
+    return db_task

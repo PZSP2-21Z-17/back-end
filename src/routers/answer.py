@@ -29,3 +29,12 @@ def all(db: Session = Depends(get_db)):
         print(error)
         return HTTPException(status_code=404)
     return db_answer
+
+@router.get("/one/{answer_id}", response_model=AnswerSchema)
+def one(answer_id: int, db: Session = Depends(get_db)):
+    try:
+        db_answer = db.query(AnswerModel).filter(AnswerModel.answer_id == answer_id).one()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
+    return db_answer

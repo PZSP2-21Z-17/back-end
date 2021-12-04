@@ -29,3 +29,12 @@ def all(db: Session = Depends(get_db)):
         print(error)
         return HTTPException(status_code=404)
     return db_task_aff
+
+@router.get("/one/{group_nr}/{exam_id}/{task_id}", response_model=TaskAffiliationSchema)
+def one(group_nr: int, exam_id: int, task_id: int, db: Session = Depends(get_db)):
+    try:
+        db_task_aff = db.query(TaskAffiliationModel).filter(TaskAffiliationModel.group_nr == group_nr).filter(TaskAffiliationModel.exam_id == exam_id).filter(TaskAffiliationModel.task_id == task_id).one()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
+    return db_task_aff
