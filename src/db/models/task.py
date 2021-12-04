@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import DateTime, Integer, Text, Numeric
+from sqlalchemy.sql.sqltypes import DateTime, Integer, Text
 
 from src.db.database import BaseModel
 
@@ -19,7 +19,7 @@ class Task(BaseModel):
     subjects        = relationship("Subject", back_populates='tasks')
     
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
-    users         = relationship("User", back_populates='tasks')
+    users           = relationship("User", back_populates='tasks')
 
     # Children 
     task_affs       = relationship("TaskAffiliation", back_populates='tasks')

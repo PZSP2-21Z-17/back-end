@@ -1,6 +1,5 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.functions import user
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime, Integer, Text
 
@@ -18,7 +17,7 @@ class Exam(BaseModel):
     subjects        = relationship("Subject", back_populates='exams')
 
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
-    users         = relationship("User", back_populates='exams')
+    users           = relationship("User", back_populates='exams')
 
     # Children
     groups          = relationship("Group", back_populates='exams')
