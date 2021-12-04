@@ -112,14 +112,14 @@ def fill():
     # User Affiliations
     fields = ['subject_code', 'user_id']
     data = [
-        [1, 'PZSP1'],
-        [1, 'PZSP2'],
-        [2, 'PZSP1'],
-        [2, 'PZSP2'],
-        [2, 'PZSP3'],
-        [3, 'PZSP1'],
-        [3, 'PZSP3'],
-        [4, 'PZSP3'],
+        ['PZSP1', 1],
+        ['PZSP2', 1],
+        ['PZSP1', 2],
+        ['PZSP2', 2],
+        ['PZSP3', 2],
+        ['PZSP1', 3],
+        ['PZSP3', 3],
+        ['PZSP3', 4],
     ]
     for d in data:
         db_tag = UserAffiliationModel(**dict(zip(fields, d)))
