@@ -4,7 +4,6 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Integer
 
 from src.db.database import BaseModel
-from src.db.models import exam
 
 class Group(BaseModel):
     __tablename__   = 'group'

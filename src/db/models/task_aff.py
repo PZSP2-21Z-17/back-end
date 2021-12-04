@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Integer, Numeric, Text
+from sqlalchemy.sql.sqltypes import Integer
 
 from src.db.database import BaseModel
 

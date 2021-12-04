@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Table
+from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Integer, Text, Numeric
+from sqlalchemy.sql.sqltypes import Integer, Text
+
 from src.db.database import BaseModel
 
 class UserAffiliation(BaseModel):

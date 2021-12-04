@@ -1,8 +1,8 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Text
-from src.db.database import BaseModel
 
+from src.db.database import BaseModel
 
 class Subject(BaseModel):
     __tablename__   = 'subject'
