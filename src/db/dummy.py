@@ -10,7 +10,9 @@ from .models.group import Group as GroupModel
 from .models.task import Task as TaskModel
 from .models.answer import Answer as AnswerModel
 from .models.tag import Tag as TagModel
-
+from .models.user_aff import UserAffiliation as UserAffiliationModel
+from .models.tag_aff import TagAffiliation as TagAffiliationModel
+from .models.task_aff import TaskAffiliation as TaskAffiliationModel
 from datetime import datetime
 from random import randint, random
 
@@ -104,6 +106,88 @@ def fill():
     for d in data:
         db_tag = TagModel(**dict(zip(fields, d)))
         db.add(db_tag)
+    
+    # From this point the responsibility for the test data takes the unpaid assistant.
+
+    # User Affiliations
+    fields = ['subject_code', 'user_id']
+    data = [
+        [1, 'PZSP1'],
+        [1, 'PZSP2'],
+        [2, 'PZSP1'],
+        [2, 'PZSP2'],
+        [2, 'PZSP3'],
+        [3, 'PZSP1'],
+        [3, 'PZSP3'],
+        [4, 'PZSP3'],
+    ]
+    for d in data:
+        db_tag = UserAffiliationModel(**dict(zip(fields, d)))
+        db.add(db_tag)
+
+    # Tag Affiliations
+    fields = ['task_id', 'tag_code']
+    data = [
+        [1, 'A'],
+        [1, 'B'],
+        [2, 'C'],
+        [3, 'A'],
+        [4, 'D'],
+        [5, 'E'],
+        [6, 'F'],
+        [7, 'G'],
+        [7, 'H'],
+        [8, 'H'],
+        [9, 'A'],
+        [10, 'B'],
+        [11, 'C'],
+        [12, 'D'],
+        [13, 'E'],
+        [14, 'F'],
+        [15, 'G'],
+        [16, 'H'],
+        [17, 'A'],
+        [18, 'A'],
+        [18, 'B'],
+        [18, 'C'],
+        [18, 'D'],
+        [18, 'E'],
+        [18, 'F'],
+        [18, 'G'],
+        [18, 'H'],
+    ]
+    for d in data:
+        db_tag = TagAffiliationModel(**dict(zip(fields, d)))
+        db.add(db_tag)
+    # Task Affiliations
+    fields = ['nr_on_sheet', 'group_nr', 'exam_id', 'task_id']
+    exam_groups = [
+        ['1', '1'],
+        ['2', '1'],
+        ['1', '2'],
+        ['2', '2'],
+        ['1', '3'],
+        ['2', '3'],
+        ['1', '4'],
+        ['2', '4'],
+        ['1', '5'],
+        ['2', '5'],
+        ['1', '6'],
+        ['2', '6'],
+    ]
+    # Tasks 18
+    # Nr on sheets 1-6
+    # Exam groups 12
+    data = []
+    starting = 0
+    for exam in exam_groups:
+        for nr_on_sheet in range(1,7):
+            d = [nr_on_sheet, exam[0], exam[1], nr_on_sheet + starting]
+            starting += 1
+
+            db_tag = TaskAffiliationModel(**dict(zip(fields, d)))
+            db.add(db_tag)
+
     # Enough.
     db.commit()
     db.close()
