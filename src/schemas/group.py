@@ -1,4 +1,7 @@
+from typing import List
 from pydantic import BaseModel as BaseSchema
+
+from .task_aff import TaskAffiliationWithAnswers
 
 class GroupBase(BaseSchema):
     group_nr: int
@@ -9,3 +12,6 @@ class GroupBase(BaseSchema):
 
 class GroupSchema(GroupBase):
     pass
+
+class GroupWithAnswers(GroupSchema):
+    task_affs: List[TaskAffiliationWithAnswers]

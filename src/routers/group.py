@@ -18,3 +18,11 @@ def create(group: GroupSchema, db: Session = Depends(get_db)):
         db.rollback()
         return HTTPException()
     return db_group
+
+@router.get("/answers/{exam_id}/{group_nr}", response_model=GroupWithAnswers)
+def answers(exam_id: int, group_nr: int, db: Session = Depends(get_db)):
+    try:
+        db_group = db.query(GroupModel).filter(GroupModel.exam_id == exam_id).filter(GroupModel.group_nr == group_nr).one()
+    except:
+        return HTTPException()
+    return db_group
