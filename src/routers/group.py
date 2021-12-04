@@ -20,6 +20,15 @@ def create(group: GroupSchema, db: Session = Depends(get_db)):
         return HTTPException(status_code=404)
     return db_group
 
+@router.get("/all/", response_model=List[GroupSchema])
+def all(db: Session = Depends(get_db)):
+    try:
+        db_group = db.query(GroupModel).all()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
+    return db_group
+
 @router.get("/answers/{exam_id}/{group_nr}", response_model=GroupWithAnswers)
 def answers(exam_id: int, group_nr: int, db: Session = Depends(get_db)):
     try:

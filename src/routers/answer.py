@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -17,5 +18,14 @@ def create(group: AnswerSchema, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
+        return HTTPException(status_code=404)
+    return db_answer
+
+@router.get("/all/", response_model=List[AnswerSchema])
+def all(db: Session = Depends(get_db)):
+    try:
+        db_answer = db.query(AnswerModel).all()
+    except Exception as error:
+        print(error)
         return HTTPException(status_code=404)
     return db_answer
