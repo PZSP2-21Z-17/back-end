@@ -2,9 +2,8 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from src.db.models.tag import Tag as TagModel
 from src.dependencies import get_db
-
+from src.db.models.tag import Tag as TagModel
 from src.schemas.tag import *
 
 router = APIRouter()
