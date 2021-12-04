@@ -1,8 +1,7 @@
-from sqlalchemy import Column
+from sqlalchemy import Column, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, Text, Numeric
-
 from src.db.database import BaseModel
 
 class UserAffiliation(BaseModel):
@@ -14,3 +13,5 @@ class UserAffiliation(BaseModel):
     # Parents
     subjects        = relationship("Subject", back_populates='user_affs')
     users           = relationship("User", back_populates='user_affs')
+
+

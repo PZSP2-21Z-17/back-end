@@ -1,8 +1,8 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relation, relationship
 from sqlalchemy.sql.sqltypes import Integer, Text
-
 from src.db.database import BaseModel
+
 
 class User(BaseModel):
     __tablename__   = 'user'
@@ -17,3 +17,6 @@ class User(BaseModel):
     user_affs       = relationship("UserAffiliation", back_populates='users')
     exams           = relationship("Exam", back_populates='users')
     tasks           = relationship("Task", back_populates='users')
+
+    # That Many-To-Many
+    subjects        = relationship("Subject", secondary='user_affiliation', back_populates='users')
