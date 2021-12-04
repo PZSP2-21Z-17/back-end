@@ -16,5 +16,5 @@ class Subject(BaseModel):
     tasks           = relationship("Task", back_populates='subjects')
 
     # That Many-To-Many
-    users           = relationship("User", secondary='user_affiliation', back_populates='subjects')
+    users           = relationship("User", secondary='user_affiliation', back_populates='subjects', overlaps="user_affs")
 

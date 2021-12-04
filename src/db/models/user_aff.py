@@ -12,7 +12,7 @@ class UserAffiliation(BaseModel):
     user_id         = Column(Integer, ForeignKey('user.user_id'), primary_key=True, nullable=False)
 
     # Parents
-    subjects        = relationship("Subject", back_populates='user_affs')
-    users           = relationship("User", back_populates='user_affs')
+    subjects        = relationship("Subject", back_populates='user_affs', overlaps="users")
+    users           = relationship("User", back_populates='user_affs', overlaps="users")
 
 
