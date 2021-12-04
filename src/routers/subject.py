@@ -14,7 +14,8 @@ def create(subject: SubjectSchema, db: Session = Depends(get_db)):
         db.add(db_subject)
         db.commit()
         db.refresh(db_subject)
-    except:
+    except Exception as error:
+        print(error)
         db.rollback()
-        return HTTPException()
+        return HTTPException(status_code=404)
     return db_subject

@@ -14,7 +14,8 @@ def create(task_aff: TaskAffiliationSchema, db: Session = Depends(get_db)):
         db.add(db_task_aff)
         db.commit()
         db.refresh(db_task_aff)
-    except:
+    except Exception as error:
+        print(error)
         db.rollback()
-        return HTTPException()
+        return HTTPException(status_code=404)
     return db_task_aff

@@ -14,7 +14,8 @@ def create(group: AnswerSchema, db: Session = Depends(get_db)):
         db.add(db_answer)
         db.commit()
         db.refresh(db_answer)
-    except:
+    except Exception as error:
+        print(error)
         db.rollback()
-        return HTTPException()
+        return HTTPException(status_code=404)
     return db_answer

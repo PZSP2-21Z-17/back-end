@@ -15,17 +15,19 @@ def create(tag: TagSchema, db: Session = Depends(get_db)):
         db.add(db_tag)
         db.commit()
         db.refresh(db_tag)
-    except:
+    except Exception as error:
+        print(error)
         db.rollback()
-        return HTTPException()
+        return HTTPException(status_code=404)
     return db_tag
 
 @router.get("/all/", response_model=List[TagSchema])
 def all(db: Session = Depends(get_db)):
     try:
         db_tags = db.query(TagModel).all()
-    except:
-        return HTTPException()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
     return db_tags
 
 @router.post("/delete/", response_model=None)
@@ -33,17 +35,19 @@ def delete(tag: TagBase, db: Session = Depends(get_db)):
     try:
         db.query(TagModel).filter(TagModel.tag_code == tag.tag_code).delete()
         db.commit()
-    except:
+    except Exception as error:
+        print(error)
         db.rollback()
-        return HTTPException()
+        return HTTPException(status_code=404)
     return
 
 @router.get("/one/{tag_code}", response_model=TagSchema)
 def one(tag_code: str, db: Session = Depends(get_db)):
     try:
         db_tag = db.query(TagModel).filter(TagModel.tag_code == tag_code).one()
-    except:
-        return HTTPException()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
     return db_tag
 
 @router.post("/update/", response_model=TagSchema)
@@ -52,6 +56,7 @@ def update(tag: TagSchema, db: Session = Depends(get_db)):
         db.query(TagModel).filter(TagModel.tag_code == tag.tag_code).update(tag.dict())
         db.commit()
         db_tag = db.query(TagModel).filter(TagModel.tag_code == tag.tag_code).one()
-    except:
-        return HTTPException()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
     return db_tag

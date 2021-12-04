@@ -14,7 +14,8 @@ def create(exam: ExamSchema, db: Session = Depends(get_db)):
         db.add(db_exam)
         db.commit()
         db.refresh(db_exam)
-    except:
+    except Exception as error:
+        print(error)
         db.rollback()
-        return HTTPException()
+        return HTTPException(status_code=404)
     return db_exam
