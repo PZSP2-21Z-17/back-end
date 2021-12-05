@@ -38,3 +38,26 @@ def one(task_id: int, db: Session = Depends(get_db)):
         print(error)
         return HTTPException(status_code=404)
     return db_task
+
+@router.post("/delete/", response_model=None)
+def delete(task: TaskBase, db: Session = Depends(get_db)):
+    try:
+        db.query(TaskModel).filter(TaskModel.task_id == task.task_id).delete()
+        db.commit()
+    except Exception as error:
+        print(error)
+        db.rollback()
+        return HTTPException(status_code=404)
+    return
+
+@router.post("/update/", response_model=TaskSchema)
+def update(task: TaskSchema, db: Session = Depends(get_db)):
+    try:
+        db.query(TaskModel).filter(TaskModel.task_id == task.task_id).update(task.dict())
+        db.commit()
+        db_task = db.query(TaskModel).filter(TaskModel.task_id == task.task_id).one()
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
+    return db_task
+
