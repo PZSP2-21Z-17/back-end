@@ -73,7 +73,7 @@ def one(task_id: int, db: Session = Depends(get_db)):
 @router.get("/all_with_answers/", response_model=List[TaskWithAnswers])
 def one(db: Session = Depends(get_db)):
     try:
-        db_tasks = db.query(TaskModel)
+        db_tasks = db.query(TaskModel).all()
     except Exception as error:
         print(error)
         return HTTPException(status_code=404)
