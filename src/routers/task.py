@@ -61,7 +61,7 @@ def update(task: TaskSchema, db: Session = Depends(get_db)):
         return HTTPException(status_code=404)
     return db_task
 
-@router.get("/answers/{task_id}", response_model=TaskWithAnswers)
+@router.get("/one_with_answers/{task_id}", response_model=TaskWithAnswers)
 def one(task_id: int, db: Session = Depends(get_db)):
     try:
         db_task = db.query(TaskModel).filter(TaskModel.task_id == task_id).one()
@@ -70,7 +70,7 @@ def one(task_id: int, db: Session = Depends(get_db)):
         return HTTPException(status_code=404)
     return db_task
 
-@router.get("/answers/", response_model=List[TaskWithAnswers])
+@router.get("/all_with_answers/", response_model=List[TaskWithAnswers])
 def one(db: Session = Depends(get_db)):
     try:
         db_tasks = db.query(TaskModel)
