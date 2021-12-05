@@ -69,3 +69,12 @@ def one(task_id: int, db: Session = Depends(get_db)):
         print(error)
         return HTTPException(status_code=404)
     return db_task
+
+@router.get("/answers/", response_model=List[TaskWithAnswers])
+def one(db: Session = Depends(get_db)):
+    try:
+        db_tasks = db.query(TaskModel)
+    except Exception as error:
+        print(error)
+        return HTTPException(status_code=404)
+    return db_tasks
