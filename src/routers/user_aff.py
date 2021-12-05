@@ -9,7 +9,7 @@ from src.schemas.user_aff import *
 router = APIRouter()
 
 @router.post("/create/", response_model=UserAffiliationSchema)
-def create(user_aff: UserAffiliationSchema, db: Session = Depends(get_db)):
+def create(user_aff: UserAffiliationCreate, db: Session = Depends(get_db)):
     db_user_aff = UserAffiliationModel(**user_aff.dict())
     try:
         db.add(db_user_aff)
@@ -18,7 +18,7 @@ def create(user_aff: UserAffiliationSchema, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_user_aff
 
 @router.get("/all/", response_model=List[UserAffiliationSchema])
@@ -27,5 +27,5 @@ def all(db: Session = Depends(get_db)):
         db_user_aff = db.query(UserAffiliationSchema).all()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_user_aff

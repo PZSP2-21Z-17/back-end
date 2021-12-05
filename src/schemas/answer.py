@@ -10,3 +10,8 @@ class AnswerSchema(AnswerBase):
     content: str
     is_correct: str
     task_id: int
+
+class AnswerCreate(BaseSchema):
+    content: str
+    is_correct: str
+    task_id: int

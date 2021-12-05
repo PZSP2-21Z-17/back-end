@@ -16,3 +16,9 @@ class TaskAffiliationSchema(TaskAffiliationBase):
 
 class TaskAffiliationWithAnswers(TaskAffiliationSchema):
     tasks: TaskWithAnswers
+
+class TaskAffiliationCreate(BaseSchema):
+    group_nr: int
+    exam_id: int
+    task_id: int
+    nr_on_sheet: int

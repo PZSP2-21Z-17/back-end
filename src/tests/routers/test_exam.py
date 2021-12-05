@@ -3,7 +3,7 @@ import datetime
 from datetime import datetime
 def test_create(client: TestClient):
     data = {
-        'exam_id': 20,
+        'exam_id': 7,
         'date_of_exam':  str(datetime.strftime(datetime.strptime('01-01-2020', '%d-%m-%Y'),'%Y-%m-%dT%H:%M:%S')),
         'commentary': 'Destroying student lifes since 1997',
         'subject_code': 'PZSP1',

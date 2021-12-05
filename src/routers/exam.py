@@ -9,7 +9,7 @@ from src.schemas.exam import *
 router = APIRouter()
 
 @router.post("/create/", response_model=ExamSchema)
-def create(exam: ExamSchema, db: Session = Depends(get_db)):
+def create(exam: ExamCreate, db: Session = Depends(get_db)):
     db_exam = ExamModel(**exam.dict())
     try:
         db.add(db_exam)
@@ -18,7 +18,7 @@ def create(exam: ExamSchema, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_exam
 
 @router.get("/all/", response_model=List[ExamSchema])
@@ -27,7 +27,7 @@ def all(db: Session = Depends(get_db)):
         db_exam = db.query(ExamModel).all()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_exam
 
 @router.get("/one/{exam_id}", response_model=ExamSchema)
@@ -36,5 +36,5 @@ def one(exam_id: int, db: Session = Depends(get_db)):
         db_exam = db.query(ExamModel).filter(ExamModel.exam_id == exam_id).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_exam

@@ -9,3 +9,7 @@ class TagAffiliationBase(BaseSchema):
 
 class TagAffiliationSchema(TagAffiliationBase):
     pass
+
+class TagAffiliationCreate(BaseSchema):
+    task_id: int
+    tag_code: str

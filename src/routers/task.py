@@ -4,12 +4,13 @@ from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
 from src.db.models.task import Task as TaskModel
+from src.db.models.answer import Answer as AnswerModel
 from src.schemas.task import *
 
 router = APIRouter()
 
 @router.post("/create/", response_model=TaskSchema)
-def create(task: TaskSchema, db: Session = Depends(get_db)):
+def create(task: TaskCreate, db: Session = Depends(get_db)):
     db_task = TaskModel(**task.dict())
     try:
         db.add(db_task)
@@ -18,7 +19,7 @@ def create(task: TaskSchema, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_task
 
 @router.get("/all/", response_model=List[TaskSchema])
@@ -27,7 +28,7 @@ def all(db: Session = Depends(get_db)):
         db_task = db.query(TaskModel).all()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_task
 
 @router.get("/one/{task_id}", response_model=TaskSchema)
@@ -36,7 +37,7 @@ def one(task_id: int, db: Session = Depends(get_db)):
         db_task = db.query(TaskModel).filter(TaskModel.task_id == task_id).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_task
 
 @router.post("/delete/", response_model=None)
@@ -47,7 +48,7 @@ def delete(task: TaskBase, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return
 
 @router.post("/update/", response_model=TaskSchema)
@@ -58,23 +59,40 @@ def update(task: TaskSchema, db: Session = Depends(get_db)):
         db_task = db.query(TaskModel).filter(TaskModel.task_id == task.task_id).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_task
 
 @router.get("/one_with_answers/{task_id}", response_model=TaskWithAnswers)
-def one(task_id: int, db: Session = Depends(get_db)):
+def one_with_answers(task_id: int, db: Session = Depends(get_db)):
     try:
         db_task = db.query(TaskModel).filter(TaskModel.task_id == task_id).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_task
 
 @router.get("/all_with_answers/", response_model=List[TaskWithAnswers])
-def one(db: Session = Depends(get_db)):
+def all_with_answers(db: Session = Depends(get_db)):
     try:
         db_tasks = db.query(TaskModel).all()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_tasks
+
+@router.post("/create_with_answers/", response_model=TaskWithAnswers)
+def create_with_answers(task_with_answers: TaskCreateWithAnswers, db: Session = Depends(get_db)):
+    task = TaskCreate(**task_with_answers.dict())
+    db_task: TaskModel = TaskModel(**task.dict())
+    db_answers = [AnswerModel(**answer.dict()) for answer in task_with_answers.answers]
+    try:
+        db.add(db_task)
+        for db_answer in db_answers:
+            db_task.answers.append(db_answer)
+        db.commit()
+        db.refresh(db_task)
+    except Exception as error:
+        print(error)
+        db.rollback()
+        raise HTTPException(status_code=404)
+    return db_task

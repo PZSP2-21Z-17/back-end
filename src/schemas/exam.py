@@ -12,3 +12,9 @@ class ExamSchema(ExamBase):
     commentary: str
     subject_code: str
     author_id: int
+
+class ExamCreate(BaseSchema):
+    date_of_exam: datetime
+    commentary: str
+    subject_code: str
+    author_id: int

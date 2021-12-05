@@ -15,3 +15,7 @@ class GroupSchema(GroupBase):
 
 class GroupWithAnswers(GroupSchema):
     task_affs: List[TaskAffiliationWithAnswers]
+
+class GroupCreate(BaseSchema):
+    group_nr: int
+    exam_id: int

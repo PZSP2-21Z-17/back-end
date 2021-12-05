@@ -9,3 +9,7 @@ class UserAffiliationBase(BaseSchema):
 
 class UserAffiliationSchema(UserAffiliationBase):
     pass
+
+class UserAffiliationCreate(BaseSchema):
+    subject_code: str
+    user_id: int

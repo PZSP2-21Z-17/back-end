@@ -8,3 +8,7 @@ class TagBase(BaseSchema):
 
 class TagSchema(TagBase):
     name: str
+
+class TagCreate(BaseSchema):
+    tag_code: str
+    name: str

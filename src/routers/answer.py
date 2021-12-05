@@ -9,7 +9,7 @@ from src.schemas.answer import *
 router = APIRouter()
 
 @router.post("/create/", response_model=AnswerSchema)
-def create(group: AnswerSchema, db: Session = Depends(get_db)):
+def create(group: AnswerCreate, db: Session = Depends(get_db)):
     db_answer = AnswerModel(**group.dict())
     try:
         db.add(db_answer)
@@ -18,7 +18,7 @@ def create(group: AnswerSchema, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_answer
 
 @router.get("/all/", response_model=List[AnswerSchema])
@@ -27,7 +27,7 @@ def all(db: Session = Depends(get_db)):
         db_answer = db.query(AnswerModel).all()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_answer
 
 @router.get("/one/{answer_id}", response_model=AnswerSchema)
@@ -36,5 +36,5 @@ def one(answer_id: int, db: Session = Depends(get_db)):
         db_answer = db.query(AnswerModel).filter(AnswerModel.answer_id == answer_id).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_answer

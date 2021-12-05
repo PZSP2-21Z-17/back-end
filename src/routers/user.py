@@ -17,7 +17,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         db.rollback()
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_user
 
 @router.post("/login/", response_model=UserLookup)
@@ -26,7 +26,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         db_user = db.query(UserModel).filter(UserModel.password == user.password).filter(UserModel.e_mail == user.e_mail).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_user
 
 @router.get("/lookup/{user_id}", response_model=UserLookup)
@@ -35,5 +35,5 @@ def lookup(user_id: int, db: Session = Depends(get_db)):
         db_user = db.query(UserModel).filter(UserModel.user_id == user_id).one()
     except Exception as error:
         print(error)
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
     return db_user

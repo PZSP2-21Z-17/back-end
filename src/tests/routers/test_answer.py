@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 
 def test_create(client: TestClient):
     data = {
-        'answer_id': 100,
+        'answer_id': 73,
         'content': 'Bababui',
         'is_correct': 't',
         'task_id': 1,

@@ -8,3 +8,7 @@ class SubjectBase(BaseSchema):
 
 class SubjectSchema(SubjectBase):
     name: str
+
+class SubjectCreate(BaseSchema):
+    subject_code: str
+    name: str
