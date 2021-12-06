@@ -87,7 +87,7 @@ def fill():
     # Answers
     fields = ['answer_id', 'content', 'is_correct', 'task_id']
     content = ['yes', 'no', 'proceed']
-    data = [[i, content[i%3], 'Y' if randint(0, 1) == 1 else 'N', i//3 + 1] for i in range(1, 73)]
+    data = [[i, content[i%3], 'Y' if randint(0, 1) == 1 else 'N', i//3 + 1] for i in range(1, 54)]
     for d in data:
         db_answer = AnswerModel(**dict(zip(fields, d)))
         db.add(db_answer)
