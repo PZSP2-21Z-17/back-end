@@ -31,6 +31,7 @@ def fill():
         [2, 'Dawid', 'Dawid', 'Dawid', 'dawid@gmail.com'],
         [3, 'Janek', 'Janek', 'Janek', 'janek@gmail.com'],
         [4, 'Kuba', 'Kuba', 'Kuba', 'kuba@gmail.com'],
+        [5, 'Kacper', 'Kacper', 'Kacper', 'kacper@gmail.com'],
     ]
     for d in data:
         db_user = UserModel(**dict(zip(fields, d)))
@@ -39,8 +40,9 @@ def fill():
     fields = ['subject_code', 'name']
     data = [
         ['PZSP1', 'Projekt zespołowy 1'],
-        ['PZSP2', 'Projekt ZeSPołowy 2'],
-        ['PZSP3', 'Kto cie skrzywdził?'],
+        ['PZSP2', 'Projekt Zespołowy 2'],
+        ['ZPI', 'Zarządzanie Projektami Informatycznymi'],
+        ['PSI', 'Programowanie Sieciowe'],
     ]
     for d in data:
         db_subject = SubjectModel(**dict(zip(fields, d)))
@@ -50,10 +52,10 @@ def fill():
     data = [
         ['1', datetime.strptime('01-01-2020', '%d-%m-%Y'), 'Kolos 1', 'PZSP1', '1'],
         ['2', datetime.strptime('02-01-2020', '%d-%m-%Y'), 'Exam 1', 'PZSP2', '3'],
-        ['3', datetime.strptime('03-01-2020', '%d-%m-%Y'), 'Bul 1', 'PZSP3', '2'],
+        ['3', datetime.strptime('03-01-2020', '%d-%m-%Y'), 'Test 1', 'ZPI', '2'],
         ['4', datetime.strptime('01-04-2020', '%d-%m-%Y'), 'Kolos 2', 'PZSP1', '4'],
         ['5', datetime.strptime('02-04-2020', '%d-%m-%Y'), 'Exam 2', 'PZSP2', '2'],
-        ['6', datetime.strptime('03-04-2020', '%d-%m-%Y'), 'Bul 2', 'PZSP3', '3'],
+        ['6', datetime.strptime('03-04-2020', '%d-%m-%Y'), 'Test 2', 'PSI', '3'],
     ]
     for d in data:
 
@@ -80,14 +82,14 @@ def fill():
         db.add(db_group)
     # Tasks
     fields = ['task_id', 'contents', 'score', 'date_creation', 'is_visible', 'subject_code', 'author_id']
-    data = [[i, 'Raise left hand', randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', randint(1, 3), randint(1, 4)] for i in range(1, 19)]
+    data = [[i, 'Raise left hand', randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', randint(1, 3), randint(1, 4)] for i in range(1, 6)]
     for d in data:
         db_task = TaskModel(**dict(zip(fields, d)))
         db.add(db_task)
     # Answers
     fields = ['answer_id', 'content', 'is_correct', 'task_id']
     content = ['yes', 'no', 'proceed']
-    data = [[i, content[i%3], 'Y' if randint(0, 1) == 1 else 'N', i//3 + 1] for i in range(1, 54)]
+    data = [[i, content[i%3], 'Y' if randint(0, 1) == 1 else 'N', i//3 + 1] for i in range(1, 13)]
     for d in data:
         db_answer = AnswerModel(**dict(zip(fields, d)))
         db.add(db_answer)
@@ -116,10 +118,10 @@ def fill():
         ['PZSP2', 1],
         ['PZSP1', 2],
         ['PZSP2', 2],
-        ['PZSP3', 2],
+        ['PSI', 2],
         ['PZSP1', 3],
-        ['PZSP3', 3],
-        ['PZSP3', 4],
+        ['ZPI', 3],
+        ['PSI', 4],
     ]
     for d in data:
         db_tag = UserAffiliationModel(**dict(zip(fields, d)))
