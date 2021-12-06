@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List
 from pydantic import BaseModel as BaseSchema
 
-from .answer import AnswerCreate, AnswerSchema
+from .answer import AnswerCreateInTask, AnswerSchema
 
 class TaskBase(BaseSchema):
     task_id: int
@@ -30,4 +30,4 @@ class TaskCreate(BaseSchema):
     author_id: int
 
 class TaskCreateWithAnswers(TaskCreate):
-    answers: List[AnswerCreate]
+    answers: List[AnswerCreateInTask]

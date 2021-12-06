@@ -15,3 +15,7 @@ class AnswerCreate(BaseSchema):
     content: str
     is_correct: str
     task_id: int
+
+class AnswerCreateInTask(BaseSchema):
+    content: str
+    is_correct: str
