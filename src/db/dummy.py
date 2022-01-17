@@ -94,14 +94,14 @@ def fill():
     # Tags
     fields = ['tag_code', 'name']
     data = [
-        ['A', 'abc'],
-        ['B', 'bcd'],
-        ['C', 'cde'],
-        ['D', 'def'],
-        ['E', 'efg'],
-        ['F', 'fgh'],
-        ['G', 'ghi'],
-        ['H', 'hij'],
+        [1, 'hard'],
+        [2, 'special'],
+        [3, 'exam material'],
+        [4, 'easy'],
+        [5, '50/50'],
+        [6, '100-0'],
+        [7, 'no-life'],
+        [8, 'yes'],
     ]
     for d in data:
         db_tag = TagModel(**dict(zip(fields, d)))
@@ -110,16 +110,16 @@ def fill():
     # From this point the responsibility for the test data takes the unpaid assistant.
 
     # User Affiliations
-    fields = ['subject_code', 'user_id']
+    fields = ['subject_code', 'user_id', 'permission']
     data = [
-        ['PZSP1', 1],
-        ['PZSP2', 1],
-        ['PZSP1', 2],
-        ['PZSP2', 2],
-        ['PZSP3', 2],
-        ['PZSP1', 3],
-        ['PZSP3', 3],
-        ['PZSP3', 4],
+        ['PZSP1', 1, 0],
+        ['PZSP2', 1, 0],
+        ['PZSP1', 2, 1],
+        ['PZSP2', 2, 1],
+        ['PZSP3', 2, 2],
+        ['PZSP1', 3, 2],
+        ['PZSP3', 3, 2],
+        ['PZSP3', 4, 2],
     ]
     for d in data:
         db_tag = UserAffiliationModel(**dict(zip(fields, d)))

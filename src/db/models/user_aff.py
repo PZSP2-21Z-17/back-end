@@ -11,6 +11,9 @@ class UserAffiliation(BaseModel):
     subject_code    = Column(Text(5), ForeignKey('subject.subject_code'), primary_key=True, nullable=False)
     user_id         = Column(Integer, ForeignKey('user.user_id'), primary_key=True, nullable=False)
 
+    # [0,1,2]
+    permission      = Column(Integer, nullable=False) 
+
     # Parents
     subjects        = relationship("Subject", back_populates='user_affs', overlaps="users")
     users           = relationship("User", back_populates='user_affs', overlaps="users")

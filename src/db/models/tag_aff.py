@@ -9,7 +9,7 @@ class TagAffiliation(BaseModel):
     __tablename__   = 'tag_affiliation'
     # Main fields
     task_id         = Column(Integer, ForeignKey('task.task_id'), primary_key=True, nullable=False)
-    tag_code        = Column(Text(5), ForeignKey('tag.tag_code'), primary_key=True, nullable=False)
+    tag_code        = Column(Integer, ForeignKey('tag.tag_code'), primary_key=True, nullable=False)
 
     # Parent
     tasks           = relationship("Task", back_populates='tag_affs')
