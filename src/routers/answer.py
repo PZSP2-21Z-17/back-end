@@ -1,25 +1,22 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from src.db.managers.answer_manager import AnswerManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.answer import Answer as AnswerModel
 from src.models.answer import *
+from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 @router.post("/create/", response_model=AnswerModel)
-def create(group: AnswerCreate, db: Session = Depends(get_db)):
-    db_answer = AnswerModel(**group.dict())
+def create(group: AnswerCreate, answer_manager: AnswerManager = Depends(AnswerManager)):
     try:
-        db.add(db_answer)
-        db.commit()
-        db.refresh(db_answer)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_answer
+        return answer_manager.add(group)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[AnswerModel])
 def all(db: Session = Depends(get_db)):
