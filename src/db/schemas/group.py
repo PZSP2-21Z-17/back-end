@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Integer
 
-from src.db.database import BaseModel
+from src.db.database import BaseModel as BaseSchema
 
-class Group(BaseModel):
+class Group(BaseSchema):
     __tablename__   = 'group'
     # Main fields
     group_nr        = Column(Integer, primary_key=True, nullable=False)

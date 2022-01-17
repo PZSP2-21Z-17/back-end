@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, Text
 
-from src.db.database import BaseModel
+from src.db.database import BaseModel as BaseSchema
 
-class Answer(BaseModel):
+class Answer(BaseSchema):
     __tablename__   = 'answer'
     # Main fields
     answer_id       = Column(Integer, primary_key=True, autoincrement=True, nullable=False)

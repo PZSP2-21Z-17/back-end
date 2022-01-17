@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
-from src.db.models.group import Group as GroupModel
-from src.schemas.group import *
+from src.db.schemas.group import Group as GroupModel
+from src.models.group import *
 
 router = APIRouter()
 
-@router.post("/create/", response_model=GroupSchema)
+@router.post("/create/", response_model=GroupModel)
 def create(group: GroupCreate, db: Session = Depends(get_db)):
     db_group = GroupModel(**group.dict())
     try:
@@ -20,7 +20,7 @@ def create(group: GroupCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_group
 
-@router.get("/all/", response_model=List[GroupSchema])
+@router.get("/all/", response_model=List[GroupModel])
 def all(db: Session = Depends(get_db)):
     try:
         db_group = db.query(GroupModel).all()
@@ -29,7 +29,7 @@ def all(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_group
 
-@router.get("/one/{exam_id}/{group_nr}", response_model=GroupSchema)
+@router.get("/one/{exam_id}/{group_nr}", response_model=GroupModel)
 def one(exam_id: int, group_nr: int, db: Session = Depends(get_db)):
     try:
         db_group = db.query(GroupModel).filter(GroupModel.exam_id == exam_id).filter(GroupModel.group_nr == group_nr).one()

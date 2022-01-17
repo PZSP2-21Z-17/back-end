@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .db.models import *
+from .db.schemas import *
 from .db.database import BaseModel, database
 from .db import dummy
 from .routers import *

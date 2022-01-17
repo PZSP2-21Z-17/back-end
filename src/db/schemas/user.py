@@ -2,9 +2,9 @@ from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Integer, Text
 
-from src.db.database import BaseModel
+from src.db.database import BaseModel as BaseSchema
 
-class User(BaseModel):
+class User(BaseSchema):
     __tablename__   = 'user'
     # Main fields
     user_id         = Column(Integer, primary_key=True, autoincrement=True, nullable=False)

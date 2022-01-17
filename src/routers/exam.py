@@ -3,12 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
-from src.db.models.exam import Exam as ExamModel
-from src.schemas.exam import *
+from src.db.schemas.exam import Exam as ExamModel
+from src.models.exam import *
 
 router = APIRouter()
 
-@router.post("/create/", response_model=ExamSchema)
+@router.post("/create/", response_model=ExamModel)
 def create(exam: ExamCreate, db: Session = Depends(get_db)):
     db_exam = ExamModel(**exam.dict())
     try:
@@ -21,7 +21,7 @@ def create(exam: ExamCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_exam
 
-@router.get("/all/", response_model=List[ExamSchema])
+@router.get("/all/", response_model=List[ExamModel])
 def all(db: Session = Depends(get_db)):
     try:
         db_exam = db.query(ExamModel).all()
@@ -30,7 +30,7 @@ def all(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_exam
 
-@router.get("/one/{exam_id}", response_model=ExamSchema)
+@router.get("/one/{exam_id}", response_model=ExamModel)
 def one(exam_id: int, db: Session = Depends(get_db)):
     try:
         db_exam = db.query(ExamModel).filter(ExamModel.exam_id == exam_id).one()

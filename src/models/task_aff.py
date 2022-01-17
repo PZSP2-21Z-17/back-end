@@ -1,9 +1,9 @@
 from typing import List
-from pydantic import BaseModel as BaseSchema
+from pydantic import BaseModel
 
 from .task import TaskWithAnswers
 
-class TaskAffiliationBase(BaseSchema):
+class TaskAffiliationBase(BaseModel):
     group_nr: int
     exam_id: int
     task_id: int
@@ -11,13 +11,13 @@ class TaskAffiliationBase(BaseSchema):
     class Config:
         orm_mode = True
 
-class TaskAffiliationSchema(TaskAffiliationBase):
+class TaskAffiliationModel(TaskAffiliationBase):
     nr_on_sheet: int
 
-class TaskAffiliationWithAnswers(TaskAffiliationSchema):
+class TaskAffiliationWithAnswers(TaskAffiliationModel):
     tasks: TaskWithAnswers
 
-class TaskAffiliationCreate(BaseSchema):
+class TaskAffiliationCreate(BaseModel):
     group_nr: int
     exam_id: int
     task_id: int

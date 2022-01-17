@@ -1,19 +1,19 @@
 from datetime import datetime
-from pydantic import BaseModel as BaseSchema
+from pydantic import BaseModel
 
-class ExamBase(BaseSchema):
+class ExamBase(BaseModel):
     exam_id: int
 
     class Config:
         orm_mode = True
 
-class ExamSchema(ExamBase):
+class ExamModel(ExamBase):
     date_of_exam: datetime
     commentary: str
     subject_code: str
     author_id: int
 
-class ExamCreate(BaseSchema):
+class ExamCreate(BaseModel):
     date_of_exam: datetime
     commentary: str
     subject_code: str

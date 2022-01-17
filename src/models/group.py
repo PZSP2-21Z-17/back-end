@@ -1,21 +1,21 @@
 from typing import List
-from pydantic import BaseModel as BaseSchema
+from pydantic import BaseModel
 
 from .task_aff import TaskAffiliationWithAnswers
 
-class GroupBase(BaseSchema):
+class GroupBase(BaseModel):
     group_nr: int
     exam_id: int
 
     class Config:
         orm_mode = True
 
-class GroupSchema(GroupBase):
+class GroupModel(GroupBase):
     pass
 
-class GroupWithAnswers(GroupSchema):
+class GroupWithAnswers(GroupModel):
     task_affs: List[TaskAffiliationWithAnswers]
 
-class GroupCreate(BaseSchema):
+class GroupCreate(BaseModel):
     group_nr: int
     exam_id: int

@@ -3,13 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
-from src.db.models.task import Task as TaskModel
-from src.db.models.answer import Answer as AnswerModel
-from src.schemas.task import *
+from src.db.schemas.task import Task as TaskModel
+from src.db.schemas.answer import Answer as AnswerModel
+from src.models.task import *
 
 router = APIRouter()
 
-@router.post("/create/", response_model=TaskSchema)
+@router.post("/create/", response_model=TaskModel)
 def create(task: TaskCreate, db: Session = Depends(get_db)):
     db_task = TaskModel(**task.dict())
     try:
@@ -22,7 +22,7 @@ def create(task: TaskCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_task
 
-@router.get("/all/", response_model=List[TaskSchema])
+@router.get("/all/", response_model=List[TaskModel])
 def all(db: Session = Depends(get_db)):
     try:
         db_task = db.query(TaskModel).all()
@@ -31,7 +31,7 @@ def all(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_task
 
-@router.get("/one/{task_id}", response_model=TaskSchema)
+@router.get("/one/{task_id}", response_model=TaskModel)
 def one(task_id: int, db: Session = Depends(get_db)):
     try:
         db_task = db.query(TaskModel).filter(TaskModel.task_id == task_id).one()
@@ -51,8 +51,8 @@ def delete(task: TaskBase, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return
 
-@router.post("/update/", response_model=TaskSchema)
-def update(task: TaskSchema, db: Session = Depends(get_db)):
+@router.post("/update/", response_model=TaskModel)
+def update(task: TaskModel, db: Session = Depends(get_db)):
     try:
         db.query(TaskModel).filter(TaskModel.task_id == task.task_id).update(task.dict())
         db.commit()

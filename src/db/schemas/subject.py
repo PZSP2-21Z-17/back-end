@@ -2,9 +2,9 @@ from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Text
 
-from src.db.database import BaseModel
+from src.db.database import BaseModel as BaseSchema
 
-class Subject(BaseModel):
+class Subject(BaseSchema):
     __tablename__   = 'subject'
     # Main fields
     subject_code    = Column(Text(5), primary_key=True, nullable=False)

@@ -3,12 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
-from src.db.models.tag import Tag as TagModel
-from src.schemas.tag import *
+from src.db.schemas.tag import Tag as TagModel
+from src.models.tag import *
 
 router = APIRouter()
 
-@router.post("/create/", response_model=TagSchema)
+@router.post("/create/", response_model=TagModel)
 def create(tag: TagCreate, db: Session = Depends(get_db)):
     db_tag = TagModel(**tag.dict())
     try:
@@ -21,7 +21,7 @@ def create(tag: TagCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_tag
 
-@router.get("/all/", response_model=List[TagSchema])
+@router.get("/all/", response_model=List[TagModel])
 def all(db: Session = Depends(get_db)):
     try:
         db_tags = db.query(TagModel).all()
@@ -30,7 +30,7 @@ def all(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return db_tags
 
-@router.get("/one/{tag_code}", response_model=TagSchema)
+@router.get("/one/{tag_code}", response_model=TagModel)
 def one(tag_code: str, db: Session = Depends(get_db)):
     try:
         db_tag = db.query(TagModel).filter(TagModel.tag_code == tag_code).one()
@@ -50,8 +50,8 @@ def delete(tag: TagBase, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     return
 
-@router.post("/update/", response_model=TagSchema)
-def update(tag: TagSchema, db: Session = Depends(get_db)):
+@router.post("/update/", response_model=TagModel)
+def update(tag: TagModel, db: Session = Depends(get_db)):
     try:
         db.query(TagModel).filter(TagModel.tag_code == tag.tag_code).update(tag.dict())
         db.commit()

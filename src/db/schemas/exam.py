@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime, Integer, Text
 
-from src.db.database import BaseModel
+from src.db.database import BaseModel as BaseSchema
 
-class Exam(BaseModel):
+class Exam(BaseSchema):
     __tablename__   = 'exam'
     # Main fields
     exam_id         = Column(Integer, autoincrement=True, primary_key=True, nullable=False)

@@ -1,6 +1,6 @@
-from pydantic import BaseModel as BaseSchema
+from pydantic import BaseModel
 
-class UserBase(BaseSchema):
+class UserBase(BaseModel):
     user_id: int
 
     class Config:
@@ -11,11 +11,11 @@ class UserLookup(UserBase):
     last_name: str
     e_mail: str
 
-class UserLogin(BaseSchema):
+class UserLogin(BaseModel):
     password: str
     e_mail: str
 
-class UserCreate(BaseSchema):
+class UserCreate(BaseModel):
     password: str
     first_name: str
     last_name: str

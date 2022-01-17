@@ -3,16 +3,16 @@ from time import mktime, strftime, strptime
 from sqlalchemy.orm.session import Session
 from src.db.database import databaseSessionMaker
 
-from .models.user import User as UserModel
-from .models.subject import Subject as SubjectModel
-from .models.exam import Exam as ExamModel
-from .models.group import Group as GroupModel
-from .models.task import Task as TaskModel
-from .models.answer import Answer as AnswerModel
-from .models.tag import Tag as TagModel
-from .models.user_aff import UserAffiliation as UserAffiliationModel
-from .models.tag_aff import TagAffiliation as TagAffiliationModel
-from .models.task_aff import TaskAffiliation as TaskAffiliationModel
+from .schemas.user import User as UserModel
+from .schemas.subject import Subject as SubjectModel
+from .schemas.exam import Exam as ExamModel
+from .schemas.group import Group as GroupModel
+from .schemas.task import Task as TaskModel
+from .schemas.answer import Answer as AnswerModel
+from .schemas.tag import Tag as TagModel
+from .schemas.user_aff import UserAffiliation as UserAffiliationModel
+from .schemas.tag_aff import TagAffiliation as TagAffiliationModel
+from .schemas.task_aff import TaskAffiliation as TaskAffiliationModel
 from datetime import datetime
 from random import randint, random
 

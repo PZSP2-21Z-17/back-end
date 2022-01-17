@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Integer
 
-from src.db.database import BaseModel
+from src.db.database import BaseModel as BaseSchema
 
-class TaskAffiliation(BaseModel):
+class TaskAffiliation(BaseSchema):
     __tablename__   = "task_affiliation"
     # Main fields
     nr_on_sheet     = Column(Integer, nullable=False)

@@ -1,21 +1,21 @@
-from pydantic import BaseModel as BaseSchema
+from pydantic import BaseModel
 
-class AnswerBase(BaseSchema):
+class AnswerBase(BaseModel):
     answer_id: int
 
     class Config:
         orm_mode = True
 
-class AnswerSchema(AnswerBase):
+class AnswerModel(AnswerBase):
     content: str
     is_correct: str
     task_id: int
 
-class AnswerCreate(BaseSchema):
+class AnswerCreate(BaseModel):
     content: str
     is_correct: str
     task_id: int
 
-class AnswerCreateInTask(BaseSchema):
+class AnswerCreateInTask(BaseModel):
     content: str
     is_correct: str
