@@ -110,7 +110,7 @@ def fill():
     # From this point the responsibility for the test data takes the unpaid assistant.
 
     # User Affiliations
-    fields = ['subject_code', 'user_id', 'permission']
+    fields = ['subject_code', 'user_id', 'permission_level']
     data = [
         ['PZSP1', 1, 0],
         ['PZSP2', 1, 0],
