@@ -3,16 +3,16 @@ from time import mktime, strftime, strptime
 from sqlalchemy.orm.session import Session
 from src.db.database import databaseSessionMaker
 
-from .schemas.user import User as UserModel
-from .schemas.subject import Subject as SubjectModel
-from .schemas.exam import Exam as ExamModel
-from .schemas.group import Group as GroupModel
-from .schemas.task import Task as TaskModel
-from .schemas.answer import Answer as AnswerModel
-from .schemas.tag import Tag as TagModel
-from .schemas.user_aff import UserAffiliation as UserAffiliationModel
-from .schemas.tag_aff import TagAffiliation as TagAffiliationModel
-from .schemas.task_aff import TaskAffiliation as TaskAffiliationModel
+from .schemas.user import User
+from .schemas.subject import Subject
+from .schemas.exam import Exam
+from .schemas.group import Group
+from .schemas.task import Task
+from .schemas.answer import Answer
+from .schemas.tag import Tag
+from .schemas.user_aff import UserAffiliation
+from .schemas.tag_aff import TagAffiliation
+from .schemas.task_aff import TaskAffiliation
 from datetime import datetime
 from random import randint, random
 
@@ -33,7 +33,7 @@ def fill():
         [4, 'Kuba', 'Kuba', 'Kuba', 'kuba@gmail.com'],
     ]
     for d in data:
-        db_user = UserModel(**dict(zip(fields, d)))
+        db_user = User(**dict(zip(fields, d)))
         db.add(db_user)
     # Subject
     fields = ['subject_code', 'name']
@@ -43,7 +43,7 @@ def fill():
         ['PZSP3', 'Kto cie skrzywdził?'],
     ]
     for d in data:
-        db_subject = SubjectModel(**dict(zip(fields, d)))
+        db_subject = Subject(**dict(zip(fields, d)))
         db.add(db_subject)
     # Exams
     fields = ['exam_id', 'date_of_exam', 'commentary', 'subject_code', 'author_id']
@@ -57,7 +57,7 @@ def fill():
     ]
     for d in data:
 
-        db_exam = ExamModel(**dict(zip(fields, d)))
+        db_exam = Exam(**dict(zip(fields, d)))
         db.add(db_exam)
     # Groups
     fields = ['group_nr', 'exam_id']
@@ -76,20 +76,20 @@ def fill():
         ['2', '6'],
     ]
     for d in data:
-        db_group = GroupModel(**dict(zip(fields, d)))
+        db_group = Group(**dict(zip(fields, d)))
         db.add(db_group)
     # Tasks
     fields = ['task_id', 'contents', 'score', 'date_creation', 'is_visible', 'subject_code', 'author_id']
     data = [[i, 'Raise left hand', randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', randint(1, 3), randint(1, 4)] for i in range(1, 19)]
     for d in data:
-        db_task = TaskModel(**dict(zip(fields, d)))
+        db_task = Task(**dict(zip(fields, d)))
         db.add(db_task)
     # Answers
     fields = ['answer_id', 'content', 'is_correct', 'task_id']
     content = ['yes', 'no', 'proceed']
     data = [[i, content[i%3], 'Y' if randint(0, 1) == 1 else 'N', i//3 + 1] for i in range(1, 54)]
     for d in data:
-        db_answer = AnswerModel(**dict(zip(fields, d)))
+        db_answer = Answer(**dict(zip(fields, d)))
         db.add(db_answer)
     # Tags
     fields = ['tag_code', 'name']
@@ -104,7 +104,7 @@ def fill():
         [8, 'yes'],
     ]
     for d in data:
-        db_tag = TagModel(**dict(zip(fields, d)))
+        db_tag = Tag(**dict(zip(fields, d)))
         db.add(db_tag)
     
     # From this point the responsibility for the test data takes the unpaid assistant.
@@ -122,7 +122,7 @@ def fill():
         ['PZSP3', 4, 2],
     ]
     for d in data:
-        db_tag = UserAffiliationModel(**dict(zip(fields, d)))
+        db_tag = UserAffiliation(**dict(zip(fields, d)))
         db.add(db_tag)
 
     # Tag Affiliations
@@ -157,7 +157,7 @@ def fill():
         [18, 'H'],
     ]
     for d in data:
-        db_tag = TagAffiliationModel(**dict(zip(fields, d)))
+        db_tag = TagAffiliation(**dict(zip(fields, d)))
         db.add(db_tag)
     # Task Affiliations
     fields = ['nr_on_sheet', 'group_nr', 'exam_id', 'task_id']
@@ -185,7 +185,7 @@ def fill():
             d = [nr_on_sheet, exam[0], exam[1], nr_on_sheet + starting]
             starting += 1
 
-            db_tag = TaskAffiliationModel(**dict(zip(fields, d)))
+            db_tag = TaskAffiliation(**dict(zip(fields, d)))
             db.add(db_tag)
 
     # Enough.
