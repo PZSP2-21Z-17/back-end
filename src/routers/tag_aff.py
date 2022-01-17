@@ -3,14 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
-from src.db.schemas.tag_aff import TagAffiliation as TagAffiliationModel
+from src.db.schemas.tag_aff import TagAffiliation
 from src.models.tag_aff import *
 
 router = APIRouter()
 
 @router.post("/create/", response_model=TagAffiliationModel)
 def create(tag_aff: TagAffiliationCreate, db: Session = Depends(get_db)):
-    db_tag_aff = TagAffiliationModel(**tag_aff.dict())
+    db_tag_aff = TagAffiliation(**tag_aff.dict())
     try:
         db.add(db_tag_aff)
         db.commit()
@@ -24,7 +24,7 @@ def create(tag_aff: TagAffiliationCreate, db: Session = Depends(get_db)):
 @router.get("/all/", response_model=List[TagAffiliationModel])
 def all(db: Session = Depends(get_db)):
     try:
-        db_tag_aff = db.query(TagAffiliationModel).all()
+        db_tag_aff = db.query(TagAffiliation).all()
     except Exception as error:
         print(error)
         raise HTTPException(status_code=404)

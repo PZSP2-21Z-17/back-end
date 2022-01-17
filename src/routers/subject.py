@@ -3,14 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
-from src.db.schemas.subject import Subject as SubjectModel
+from src.db.schemas.subject import Subject
 from src.models.subject import *
 
 router = APIRouter()
 
 @router.post("/create/", response_model=SubjectModel)
 def create(subject: SubjectCreate, db: Session = Depends(get_db)):
-    db_subject = SubjectModel(**subject.dict())
+    db_subject = Subject(**subject.dict())
     try:
         db.add(db_subject)
         db.commit()
@@ -24,7 +24,7 @@ def create(subject: SubjectCreate, db: Session = Depends(get_db)):
 @router.get("/all/", response_model=List[SubjectModel])
 def all(db: Session = Depends(get_db)):
     try:
-        db_subject = db.query(SubjectModel).all()
+        db_subject = db.query(Subject).all()
     except Exception as error:
         print(error)
         raise HTTPException(status_code=404)
@@ -33,7 +33,7 @@ def all(db: Session = Depends(get_db)):
 @router.get("/one/{subject_code}", response_model=SubjectModel)
 def one(subject_code: str, db: Session = Depends(get_db)):
     try:
-        db_subject = db.query(SubjectModel).filter(SubjectModel.subject_code == subject_code).one()
+        db_subject = db.query(Subject).filter(Subject.subject_code == subject_code).one()
     except Exception as error:
         print(error)
         raise HTTPException(status_code=404)

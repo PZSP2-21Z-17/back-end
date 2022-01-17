@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
@@ -7,20 +8,26 @@ from src.db.schemas.answer import Answer
 from src.models.answer import *
 
 class AnswerManager:
-    def add(answer: AnswerCreate, db: Session = Depends(get_db)) -> Answer:
-        db_answer = Answer(**answer.dict())
+    def add(answer: Answer, db: Session = Depends(get_db)) -> Answer:
         try:
-            db.add(db_answer)
+            db.add(answer)
             db.commit()
-            db.refresh(db_answer)
+            db.refresh(answer)
         except DatabaseError as error:
-            print(error)
             db.rollback()
             raise error
-        return db_answer
+        return answer
 
-    def all():
-        pass
+    def all(db: Session = Depends(get_db)) -> List[Answer]:
+        try:
+            answers = db.query(AnswerModel).all()
+        except DatabaseError as error:
+            raise error
+        return answers
 
-    def one():
-        pass
+    def byId(answer_id: int, db: Session = Depends(get_db)):
+        try:
+            answer = db.query(Answer).filter(Answer.answer_id == answer_id).one()
+        except DatabaseError as error:
+            raise error
+        return answer
