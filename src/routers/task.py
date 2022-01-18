@@ -1,10 +1,8 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, Query
 from src.db.managers.task_manager import TaskManager
 from src.db.managers.exceptions import ManagerError
 
-from src.dependencies import get_db
 from src.db.schemas.task import Task
 from src.models.task import *
 from src.routers.exceptions import HTTPUnauthorized
@@ -66,5 +64,12 @@ def all_with_answers(task_manager: TaskManager = Depends(TaskManager)):
 def create_with_answers(task_with_answers: TaskCreateWithAnswers, task_manager: TaskManager = Depends(TaskManager)):
     try:
         return task_manager.create_with_answers(task_with_answers)
+    except ManagerError:
+        raise HTTPUnauthorized()
+
+@router.get("/find_by_tags", response_model=List[TaskWithAnswers])
+def find_by_tags(tags: List[int] = Query([]), search_string: str = Query(''), task_manager: TaskManager = Depends(TaskManager)):
+    try:
+        return task_manager.find_by_tags(tags, search_string)
     except ManagerError:
         raise HTTPUnauthorized()

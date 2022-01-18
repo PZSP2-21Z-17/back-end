@@ -33,3 +33,10 @@ def one(subject_code: str, subject_manager: SubjectManager = Depends(SubjectMana
         return subject_manager.byCode(subject_code)
     except ManagerError:
         raise HTTPUnauthorized()
+
+@router.get("/find/", response_model=List[SubjectModel])
+def one(search_string: str, offset: int = 0, subject_manager: SubjectManager = Depends(SubjectManager)):
+    try:
+        return subject_manager.find(search_string, offset)
+    except ManagerError:
+        raise HTTPUnauthorized()

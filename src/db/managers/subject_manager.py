@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import Depends
+from sqlalchemy import func, desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
 
@@ -28,9 +29,17 @@ class SubjectManager:
             raise error
         return subjects
 
-    def byCode(self, subject_code: str):
+    def byCode(self, subject_code: str) -> Subject:
         try:
             subject = self.db.query(Subject).filter(Subject.subject_code == subject_code).one()
         except DatabaseError as error:
             raise error
         return subject
+
+    def find(self, search_string: str, offset: int, limit: int = 25) -> List[Subject]:
+        try:
+            return self.db.query(Subject).order_by(desc(func.similarity(Subject.name, search_string))).limit(limit).offset(offset * limit).all()
+        except DatabaseError as error:
+            raise error
+        
+        

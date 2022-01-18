@@ -1,14 +1,14 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.sqltypes import Text
+from sqlalchemy.sql.sqltypes import VARCHAR
 
 from src.db.database import BaseModel as BaseSchema
 
 class Subject(BaseSchema):
     __tablename__   = 'subject'
     # Main fields
-    subject_code    = Column(Text(5), primary_key=True, nullable=False)
-    name            = Column(Text(40), nullable=False, unique=True)
+    subject_code    = Column(VARCHAR(5), primary_key=True, nullable=False)
+    name            = Column(VARCHAR(40), nullable=False, unique=True)
 
     # Children 
     user_affs       = relationship("UserAffiliation", back_populates='subjects')

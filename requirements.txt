@@ -3,3 +3,4 @@ SQLAlchemy==1.4.27
 uvicorn==0.15.0
 pytest==6.2.5
 coverage==6.1.2
+psycopg2==2.9.3
