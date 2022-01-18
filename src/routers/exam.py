@@ -1,40 +1,34 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from src.db.managers.exam_manager import ExamManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.exam import Exam
 from src.models.exam import *
+from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 @router.post("/create/", response_model=ExamModel)
-def create(exam: ExamCreate, db: Session = Depends(get_db)):
-    db_exam = Exam(**exam.dict())
+def create(answer: ExamCreate, answer_manager: ExamManager = Depends(ExamManager)):
     try:
-        db.add(db_exam)
-        db.commit()
-        db.refresh(db_exam)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_exam
+        return answer_manager.add(Exam(**answer.dict()))
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[ExamModel])
-def all(db: Session = Depends(get_db)):
+def all(answer_manager: ExamManager = Depends(ExamManager)):
     try:
-        db_exam = db.query(Exam).all()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_exam
+        a = answer_manager.all()
+        return a
+    except ManagerError:
+        raise HTTPUnauthorized()
 
-@router.get("/one/{exam_id}", response_model=ExamModel)
-def one(exam_id: int, db: Session = Depends(get_db)):
+@router.get("/one/{answer_id}", response_model=ExamModel)
+def one(answer_id: int, answer_manager: ExamManager = Depends(ExamManager)):
     try:
-        db_exam = db.query(Exam).filter(Exam.exam_id == exam_id).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_exam
+        return answer_manager.byId(answer_id)
+    except ManagerError:
+        raise HTTPUnauthorized()

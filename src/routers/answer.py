@@ -22,7 +22,6 @@ def create(answer: AnswerCreate, answer_manager: AnswerManager = Depends(AnswerM
 def all(answer_manager: AnswerManager = Depends(AnswerManager)):
     try:
         a = answer_manager.all()
-        print(a)
         return a
     except ManagerError:
         raise HTTPUnauthorized()

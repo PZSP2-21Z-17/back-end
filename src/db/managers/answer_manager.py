@@ -8,26 +8,29 @@ from src.db.schemas.answer import Answer
 from src.models.answer import *
 
 class AnswerManager:
-    def add(answer: Answer, db: Session = Depends(get_db)) -> Answer:
+    def __init__ (self, db: Session = Depends(get_db)):
+        self.db = db
+
+    def add(self, answer: Answer) -> Answer:
         try:
-            db.add(answer)
-            db.commit()
-            db.refresh(answer)
+            self.db.add(answer)
+            self.db.commit()
+            self.db.refresh(answer)
         except DatabaseError as error:
-            db.rollback()
+            self.db.rollback()
             raise error
         return answer
 
-    def all(db: Session = Depends(get_db)) -> List[Answer]:
+    def all(self) -> List[Answer]:
         try:
-            answers = db.query(AnswerModel).all()
+            answers = self.db.query(Answer).all()
         except DatabaseError as error:
             raise error
         return answers
 
-    def byId(answer_id: int, db: Session = Depends(get_db)):
+    def byId(self, answer_id: int):
         try:
-            answer = db.query(Answer).filter(Answer.answer_id == answer_id).one()
+            answer = self.db.query(Answer).filter(Answer.answer_id == answer_id).one()
         except DatabaseError as error:
             raise error
         return answer

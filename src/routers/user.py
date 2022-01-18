@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from http.client import responses
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_db
@@ -27,6 +28,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     except Exception as error:
         print(error)
         raise HTTPException(status_code=404)
+    create_cookie(db_user.user_id)
     return db_user
 
 @router.get("/lookup/{user_id}", response_model=UserLookup)
@@ -37,3 +39,10 @@ def lookup(user_id: int, db: Session = Depends(get_db)):
         print(error)
         raise HTTPException(status_code=404)
     return db_user
+
+
+
+def create_cookie(value):
+    response = Response()
+    response.set_cookie(key="user_id", value=value)
+    return response

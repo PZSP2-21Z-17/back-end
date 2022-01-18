@@ -1,40 +1,35 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from src.db.managers.subject_manager import SubjectManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.subject import Subject
 from src.models.subject import *
+from src.routers.exceptions import HTTPUnauthorized
+
 
 router = APIRouter()
 
 @router.post("/create/", response_model=SubjectModel)
-def create(subject: SubjectCreate, db: Session = Depends(get_db)):
-    db_subject = Subject(**subject.dict())
+def create(subject: SubjectCreate, subject_manager: SubjectManager = Depends(SubjectManager)):
     try:
-        db.add(db_subject)
-        db.commit()
-        db.refresh(db_subject)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_subject
+        return subject_manager.add(Subject(**subject.dict()))
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[SubjectModel])
-def all(db: Session = Depends(get_db)):
+def all(subject_manager: SubjectManager = Depends(SubjectManager)):
     try:
-        db_subject = db.query(Subject).all()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_subject
+        a = subject_manager.all()
+        return a
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/one/{subject_code}", response_model=SubjectModel)
-def one(subject_code: str, db: Session = Depends(get_db)):
+def one(subject_code: str, subject_manager: SubjectManager = Depends(SubjectManager)):
     try:
-        db_subject = db.query(Subject).filter(Subject.subject_code == subject_code).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_subject
+        return subject_manager.byCode(subject_code)
+    except ManagerError:
+        raise HTTPUnauthorized()

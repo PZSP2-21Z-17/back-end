@@ -1,40 +1,34 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from src.db.managers.task_aff_manager import TaskAffiliationManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.task_aff import TaskAffiliation
 from src.models.task_aff import *
+from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 @router.post("/create/", response_model=TaskAffiliationModel)
-def create(task_aff: TaskAffiliationCreate, db: Session = Depends(get_db)):
-    db_task_aff = TaskAffiliation(**task_aff.dict())
+def create(task_aff: TaskAffiliationCreate,task_aff_manager: TaskAffiliationManager = Depends(TaskAffiliationManager)):
     try:
-        db.add(db_task_aff)
-        db.commit()
-        db.refresh(db_task_aff)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_task_aff
+        return task_aff_manager.add(TaskAffiliation(**task_aff.dict()))
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[TaskAffiliationModel])
-def all(db: Session = Depends(get_db)):
+def all(task_aff_manager: TaskAffiliationManager = Depends(TaskAffiliationManager)):
     try:
-        db_task_aff = db.query(TaskAffiliation).all()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_task_aff
+        a = task_aff_manager.all()
+        return a
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/one/{group_nr}/{exam_id}/{task_id}", response_model=TaskAffiliationModel)
-def one(group_nr: int, exam_id: int, task_id: int, db: Session = Depends(get_db)):
+def one(group_nr: int, exam_id: int, task_id: int, task_aff_manager:TaskAffiliationManager = Depends(TaskAffiliationManager)):
     try:
-        db_task_aff = db.query(TaskAffiliation).filter(TaskAffiliation.group_nr == group_nr).filter(TaskAffiliation.exam_id == exam_id).filter(TaskAffiliation.task_id == task_id).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_task_aff
+        return task_aff_manager.byId(group_nr, exam_id, task_id)
+    except ManagerError:
+        raise HTTPUnauthorized()
