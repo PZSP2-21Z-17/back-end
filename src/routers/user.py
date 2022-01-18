@@ -22,13 +22,13 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @router.post("/login/", response_model=UserLookup)
-def login(user: UserLogin, db: Session = Depends(get_db)):
+def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
     try:
         db_user = db.query(User).filter(User.password == user.password).filter(User.e_mail == user.e_mail).one()
     except Exception as error:
         print(error)
         raise HTTPException(status_code=404)
-    create_cookie(db_user.user_id)
+    response.set_cookie('key_id', db_user.user_id, max_age=15*60)
     return db_user
 
 @router.get("/lookup/{user_id}", response_model=UserLookup)
@@ -39,10 +39,3 @@ def lookup(user_id: int, db: Session = Depends(get_db)):
         print(error)
         raise HTTPException(status_code=404)
     return db_user
-
-
-
-def create_cookie(value):
-    response = Response()
-    response.set_cookie(key="user_id", value=value)
-    return response
