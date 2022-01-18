@@ -1,0 +1,86 @@
+from typing import List
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import DatabaseError
+
+from src.dependencies import get_db
+from src.db.schemas.task import Task
+from src.db.schemas.answer import Answer
+
+from src.models.task import TaskBase, TaskModel, TaskCreateWithAnswers, TaskCreate
+
+class TaskManager:
+    def __init__ (self, db: Session = Depends(get_db)):
+        self.db = db
+
+    def add(self, task: Task) -> Task:
+        try:
+            self.db.add(task)
+            self.db.commit()
+            self.db.refresh(task)
+        except DatabaseError as error:
+            self.db.rollback()
+            raise error
+        return task
+
+    def all(self) -> List[Task]:
+        try:
+            tasks = self.db.query(Task).all()
+        except DatabaseError as error:
+            raise error
+        return tasks
+
+    def byId(self, task_id: int):
+        try:
+            answer = self.db.query(Task).filter(Task.task_id == task_id).one()
+        except DatabaseError as error:
+            raise error
+        return answer
+
+    def delete(self, task:TaskBase):
+        try:
+            self.db.query(Task).filter(Task.task_id == task.task_id).delete()
+            self.db.commit()
+        except DatabaseError as error:
+            self.db.rollback()
+            raise error
+        return
+
+    def update(self, task:TaskModel):
+        try:
+            self.db.query(Task).filter(Task.task_id == task.task_id).update(task.dict())
+            self.db.commit()
+            db_task = self.db.query(Task).filter(Task.task_id == task.task_id).one()
+        except DatabaseError as error:
+            raise error
+        return db_task
+
+    def one_with_answers(self, task_id:int):
+        try:
+            task = self.db.query(Task).filter(Task.task_id == task_id).one()
+        except DatabaseError as error:
+            raise error
+        return task
+
+    def all_with_answers(self):
+        try:
+            tasks = self.db.query(Task).all()
+        except DatabaseError as error:
+            raise error
+        return tasks
+
+    def create_with_answers(self, task_with_answers: TaskCreateWithAnswers):
+        task = TaskCreate(**task_with_answers.dict())
+        db_task = Task(**task.dict())
+        db_answers = [Answer(**answer.dict()) for answer in task_with_answers.answers]
+        try:
+            self.db.add(db_task)
+            for db_answer in db_answers:
+                db_task.answers.append(db_answer)
+            self.db.commit()
+            self.db.refresh(db_task)
+        except DatabaseError as error:
+            self.db.rollback()
+            raise error
+        return db_task
+

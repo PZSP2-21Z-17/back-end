@@ -1,98 +1,70 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from src.db.managers.task_manager import TaskManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.task import Task
-from src.db.schemas.answer import Answer
 from src.models.task import *
+from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 @router.post("/create/", response_model=TaskModel)
-def create(task: TaskCreate, db: Session = Depends(get_db)):
-    db_task = TaskModel(**task.dict())
+def create(task: TaskCreate, task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db.add(db_task)
-        db.commit()
-        db.refresh(db_task)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_task
+        return task_manager.add(Task(**task.dict()))
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[TaskModel])
-def all(db: Session = Depends(get_db)):
+def all(task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db_task = db.query(Task).all()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_task
+        a = task_manager.all()
+        return a
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/one/{task_id}", response_model=TaskModel)
-def one(task_id: int, db: Session = Depends(get_db)):
+def one(task_id: int, task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db_task = db.query(Task).filter(Task.task_id == task_id).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_task
+        return task_manager.byId(task_id)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/delete/", response_model=None)
-def delete(task: TaskBase, db: Session = Depends(get_db)):
+def delete(task: TaskBase, task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db.query(Task).filter(Task.task_id == task.task_id).delete()
-        db.commit()
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return
+        return task_manager.delete(task)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/update/", response_model=TaskModel)
-def update(task: TaskModel, db: Session = Depends(get_db)):
+def update(task: TaskModel,  task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db.query(Task).filter(Task.task_id == task.task_id).update(task.dict())
-        db.commit()
-        db_task = db.query(Task).filter(Task.task_id == task.task_id).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_task
+        return task_manager.update(task)
+    except ManagerError:
+        raise HTTPUnauthorized()
+
 
 @router.get("/one_with_answers/{task_id}", response_model=TaskWithAnswers)
-def one_with_answers(task_id: int, db: Session = Depends(get_db)):
+def one_with_answers(task_id: int, task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db_task = db.query(Task).filter(Task.task_id == task_id).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_task
+        return task_manager.one_with_answers(task_id)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all_with_answers/", response_model=List[TaskWithAnswers])
-def all_with_answers(db: Session = Depends(get_db)):
+def all_with_answers(task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db_tasks = db.query(Task).all()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_tasks
+        return task_manager.all_with_answers()
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/create_with_answers/", response_model=TaskWithAnswers)
-def create_with_answers(task_with_answers: TaskCreateWithAnswers, db: Session = Depends(get_db)):
-    task = TaskCreate(**task_with_answers.dict())
-    db_task = Task(**task.dict())
-    db_answers = [Answer(**answer.dict()) for answer in task_with_answers.answers]
+def create_with_answers(task_with_answers: TaskCreateWithAnswers, task_manager: TaskManager = Depends(TaskManager)):
     try:
-        db.add(db_task)
-        for db_answer in db_answers:
-            db_task.answers.append(db_answer)
-        db.commit()
-        db.refresh(db_task)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_task
+        return task_manager.create_with_answers(task_with_answers)
+    except ManagerError:
+        raise HTTPUnauthorized()
