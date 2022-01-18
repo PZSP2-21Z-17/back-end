@@ -30,7 +30,7 @@ class TagManager:
 
     def byCode(self, tag_code: int):
         try:
-            tag = self.db.query(Tag).filter(Tag.tag_code == tag_code).one()
+            tag = self.db.query(Tag).filter(Tag.tag_id == tag_code).one()
         except DatabaseError as error:
             raise error
         return tag
@@ -38,7 +38,7 @@ class TagManager:
 
     def delete(self, tag: TagBase):
         try:
-            self.db.query(Tag).filter(Tag.tag_code == tag.tag_code).delete()
+            self.db.query(Tag).filter(Tag.tag_id == tag.tag_code).delete()
             self.db.commit()
         except DatabaseError as error:
             self.db.rollback()
@@ -48,9 +48,9 @@ class TagManager:
 
     def update(self, tag: TagModel):
         try:
-            self.db.query(Tag).filter(Tag.tag_code == tag.tag_code).update(tag.dict())
+            self.db.query(Tag).filter(Tag.tag_id == tag.tag_code).update(tag.dict())
             self.db.commit()
-            db_tag = self.db.query(Tag).filter(Tag.tag_code == tag.tag_code).one()        
+            db_tag = self.db.query(Tag).filter(Tag.tag_id == tag.tag_code).one()        
         except DatabaseError as error:
             raise error
         return db_tag

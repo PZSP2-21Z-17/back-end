@@ -80,7 +80,7 @@ def fill():
         db.add(db_group)
     # Tasks
     fields = ['task_id', 'contents', 'score', 'date_creation', 'is_visible', 'subject_code', 'author_id']
-    data = [[i, 'Raise left hand', randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', randint(1, 3), randint(1, 4)] for i in range(1, 19)]
+    data = [[i, 'Raise left hand', randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', f'PZSP{randint(1, 3)}', randint(1, 4)] for i in range(1, 19)]
     for d in data:
         db_task = Task(**dict(zip(fields, d)))
         db.add(db_task)
@@ -92,7 +92,7 @@ def fill():
         db_answer = Answer(**dict(zip(fields, d)))
         db.add(db_answer)
     # Tags
-    fields = ['tag_code', 'name']
+    fields = ['tag_id', 'name']
     data = [
         [1, 'hard'],
         [2, 'special'],
@@ -126,7 +126,7 @@ def fill():
         db.add(db_tag)
 
     # Tag Affiliations
-    fields = ['task_id', 'tag_code']
+    fields = ['task_id', 'tag_id']
     data = [
         [1, 1],
         [1, 2],
@@ -182,11 +182,11 @@ def fill():
     starting = 0
     for exam in exam_groups:
         for nr_on_sheet in range(1,7):
-            d = [nr_on_sheet, exam[0], exam[1], nr_on_sheet + starting]
+            d = [nr_on_sheet, exam[0], exam[1], (nr_on_sheet + starting) % 18]
             starting += 1
 
-            db_tag = TaskAffiliation(**dict(zip(fields, d)))
-            db.add(db_tag)
+            db_task = TaskAffiliation(**dict(zip(fields, d)))
+            db.add(db_task)
 
     # Enough.
     db.commit()

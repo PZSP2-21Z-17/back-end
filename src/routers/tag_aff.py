@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from src.db.managers.tagg_aff_manager import TagAffiliationManager
+from src.db.managers.tag_aff_manager import TagAffiliationManager
 from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db

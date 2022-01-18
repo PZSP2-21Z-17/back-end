@@ -1,11 +1,15 @@
 from typing import List
 from fastapi import Depends
+from sqlalchemy import func
+from sqlalchemy.sql import label, case, any_, desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
 
 from src.dependencies import get_db
 from src.db.schemas.task import Task
 from src.db.schemas.answer import Answer
+from src.db.schemas.tag_aff import TagAffiliation
+from src.db.schemas.tag import Tag
 
 from src.models.task import TaskBase, TaskModel, TaskCreateWithAnswers, TaskCreate
 
@@ -83,4 +87,20 @@ class TaskManager:
             self.db.rollback()
             raise error
         return db_task
+    
+    def find_by_tags(self, tags: List[int], search_string: str):
+        try:
+            query = self.db.query(Task)
+            if len(tags) > 0:
+                query = query.\
+                    join(Task.tag_affs).\
+                    filter(TagAffiliation.\
+                    tag_id.in_(tags)).\
+                    group_by(Task).\
+                    having(func.count() == len(tags))
+            query = query.order_by(desc(func.similarity(Task.contents, search_string)))
+            return query.all()
+        except DatabaseError as error:
+            raise error
+
 

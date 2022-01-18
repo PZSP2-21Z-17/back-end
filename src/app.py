@@ -6,6 +6,7 @@ from .db.database import BaseModel, database
 from .db import dummy
 from .routers import *
 
+BaseModel.metadata.drop_all(bind=database)
 BaseModel.metadata.create_all(bind=database)
 dummy.fill()
 
