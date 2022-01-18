@@ -1,62 +1,48 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from src.db.managers.tag_manager import TagManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.tag import Tag
 from src.models.tag import *
+from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 @router.post("/create/", response_model=TagModel)
-def create(tag: TagCreate, db: Session = Depends(get_db)):
-    db_tag = Tag(**tag.dict())
+def create(tag: TagCreate, tag_manager: TagManager = Depends(TagManager)):
     try:
-        db.add(db_tag)
-        db.commit()
-        db.refresh(db_tag)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_tag
+        return tag_manager.add(Tag(**tag.dict()))
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[TagModel])
-def all(db: Session = Depends(get_db)):
+def all( tag_manager: TagManager = Depends(TagManager)):
     try:
-        db_tags = db.query(Tag).all()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_tags
+        a = tag_manager.all()
+        return a
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/one/{tag_code}", response_model=TagModel)
-def one(tag_code: str, db: Session = Depends(get_db)):
+def one(tag_code: int, tag_manager: TagManager = Depends(TagManager)):
     try:
-        db_tag = db.query(Tag).filter(Tag.tag_code == tag_code).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_tag
+        return tag_manager.byCode(tag_code)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/delete/", response_model=None)
-def delete(tag: TagBase, db: Session = Depends(get_db)):
+def delete(tag: TagBase,  tag_manager: TagManager = Depends(TagManager)):
     try:
-        db.query(Tag).filter(Tag.tag_code == tag.tag_code).delete()
-        db.commit()
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return
+        return tag_manager.delete(tag)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/update/", response_model=TagModel)
-def update(tag: TagModel, db: Session = Depends(get_db)):
+def update(tag: TagModel, tag_manager: TagManager = Depends(TagManager)):
     try:
-        db.query(Tag).filter(Tag.tag_code == tag.tag_code).update(tag.dict())
-        db.commit()
-        db_tag = db.query(Tag).filter(Tag.tag_code == tag.tag_code).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_tag
+        return tag_manager.update(tag)
+    except ManagerError:
+        raise HTTPUnauthorized()
