@@ -1,41 +1,33 @@
 from http.client import responses
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
+from src.db.managers.user_manager import UserManager
+from src.db.managers.exceptions import ManagerError
 
 from src.dependencies import get_db
 from src.db.schemas.user import User
 from src.models.user import *
+from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 @router.post("/register/", response_model=UserLookup)
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = User(**user.dict())
+def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
     try:
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-    except Exception as error:
-        print(error)
-        db.rollback()
-        raise HTTPException(status_code=404)
-    return db_user
+        return user_manager.register(user)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/login/", response_model=UserLookup)
-def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
+def login(user:UserLogin, user_manager:UserManager = Depends(UserManager)):
     try:
-        db_user = db.query(User).filter(User.password == user.password).filter(User.e_mail == user.e_mail).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    response.set_cookie('key_id', db_user.user_id, max_age=15*60)
-    return db_user
+        return user_manager.login(user)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.get("/lookup/{user_id}", response_model=UserLookup)
-def lookup(user_id: int, db: Session = Depends(get_db)):
+def lookup(user_id: int, user_manager:UserManager = Depends(UserManager)):
     try:
-        db_user = db.query(User).filter(User.user_id == user_id).one()
-    except Exception as error:
-        print(error)
-        raise HTTPException(status_code=404)
-    return db_user
+        return user_manager.lookup(user_id)
+    except ManagerError:
+        raise HTTPUnauthorized()
