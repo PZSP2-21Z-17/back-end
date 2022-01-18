@@ -19,9 +19,11 @@ def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
         raise HTTPUnauthorized()
 
 @router.post("/login/", response_model=UserLookup)
-def login(user:UserLogin, user_manager:UserManager = Depends(UserManager)):
+def login(user: UserLogin, response: Response, user_manager: UserManager = Depends(UserManager)):
     try:
-        return user_manager.login(user)
+        user = user_manager.login(user)
+        response.set_cookie('key_id', user.user_id, max_age=15*60)
+        return user
     except ManagerError:
         raise HTTPUnauthorized()
 

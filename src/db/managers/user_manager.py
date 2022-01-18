@@ -22,12 +22,11 @@ class UserManager:
             raise error
         return db_user
 
-    def login(self, user: UserLogin, response: Response) :
+    def login(self, user: UserLogin):
         try:
             db_user = self.db.query(User).filter(User.password == user.password).filter(User.e_mail == user.e_mail).one()
         except DatabaseError as error:
             raise error
-        response.set_cookie('key_id', db_user.user_id, max_age=15*60)
         return db_user
 
     def lookup(self, user_id: int):
