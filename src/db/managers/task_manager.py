@@ -88,17 +88,20 @@ class TaskManager:
             raise error
         return db_task
     
-    def find_by_tags(self, tags: List[int], search_string: str):
+    def find_by_tags(self, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
         try:
             query = self.db.query(Task)
             if len(tags) > 0:
                 query = query.\
                     join(Task.tag_affs).\
-                    filter(TagAffiliation.\
-                    tag_id.in_(tags)).\
+                    filter(TagAffiliation.tag_id.in_(tags)).\
                     group_by(Task).\
                     having(func.count() == len(tags))
-            query = query.order_by(desc(func.similarity(Task.contents, search_string)))
+            if subject_code is not None:
+                query = query.filter(Task.subject_code == subject_code)
+            if search_string is not None:
+                query = query.order_by(desc(func.similarity(Task.contents, search_string)))
+            query = query.limit(limit).offset(offset*limit)
             return query.all()
         except DatabaseError as error:
             raise error

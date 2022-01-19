@@ -68,8 +68,14 @@ def create_with_answers(task_with_answers: TaskCreateWithAnswers, task_manager: 
         raise HTTPUnauthorized()
 
 @router.get("/find_by_tags", response_model=List[TaskWithAnswers])
-def find_by_tags(tags: List[int] = Query([]), search_string: str = Query(''), task_manager: TaskManager = Depends(TaskManager)):
+def find_by_tags(
+    tags: List[int] = Query([]),
+    search_string: str = Query(''),
+    subject_code: str = Query(''),
+    offset: int = Query(0),
+    task_manager: TaskManager = Depends(TaskManager)
+):
     try:
-        return task_manager.find_by_tags(tags, search_string)
+        return task_manager.find_by_tags(tags, search_string, subject_code, offset)
     except ManagerError:
         raise HTTPUnauthorized()
