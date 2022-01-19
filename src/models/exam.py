@@ -10,11 +10,11 @@ class ExamBase(BaseModel):
 class ExamModel(ExamBase):
     date_of_exam: datetime
     commentary: str
-    subject_code: str
+    description: str
     author_id: int
 
 class ExamCreate(BaseModel):
     date_of_exam: datetime
     commentary: str
-    subject_code: str
+    description: str
     author_id: int

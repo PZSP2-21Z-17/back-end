@@ -15,7 +15,6 @@ class TaskBase(BaseModel):
 
 class TaskModel(TaskBase):
     contents: str
-    score: int
     date_creation: datetime
     is_visible: str
     subject_code: str
@@ -26,7 +25,6 @@ class TaskWithAnswers(TaskModel):
 
 class TaskCreate(BaseModel):
     contents: str
-    score: int
     date_creation: datetime
     is_visible: str
     subject_code: str

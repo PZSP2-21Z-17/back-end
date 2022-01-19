@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import DateTime, Integer, VARCHAR
+from sqlalchemy.sql.sqltypes import DateTime, Integer, VARCHAR, CHAR
 
 from src.db.database import BaseModel as BaseSchema
 
@@ -10,9 +10,8 @@ class Task(BaseSchema):
     # Main fields
     task_id         = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     contents        = Column(VARCHAR(500), nullable=False)
-    score           = Column(Integer, nullable=False)
     date_creation   = Column(DateTime, nullable=False)
-    is_visible      = Column(VARCHAR(1), nullable=False)
+    is_visible      = Column(CHAR(1), nullable=False)
 
     # Parents
     subject_code    = Column(VARCHAR(5), ForeignKey('subject.subject_code'), nullable=False)

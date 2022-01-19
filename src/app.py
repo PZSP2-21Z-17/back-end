@@ -19,7 +19,6 @@ app.include_router(tag_aff.router, prefix="/tag_aff")
 app.include_router(tag.router, prefix="/tag")
 app.include_router(task_aff.router, prefix="/task_aff")
 app.include_router(task.router, prefix="/task")
-app.include_router(user_aff.router, prefix="/user_aff")
 app.include_router(user.router, prefix="/user")
 
 app.add_middleware(

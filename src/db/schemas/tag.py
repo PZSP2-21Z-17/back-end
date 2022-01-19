@@ -7,7 +7,7 @@ from src.db.database import BaseModel as BaseSchema
 class Tag(BaseSchema):
     __tablename__   = 'tag'
     # Main fields
-    tag_id          = Column(Integer, primary_key=True,autoincrement=True, nullable=False)
+    tag_id          = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name            = Column(VARCHAR(20), nullable=False, unique=True)
 
     # Children

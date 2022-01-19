@@ -13,9 +13,6 @@ class Exam(BaseSchema):
     commentary      = Column(VARCHAR(100))
     description     = Column(VARCHAR(2000))
     # Parents
-    subject_code    = Column(VARCHAR(5), ForeignKey('subject.subject_code'), nullable=False)
-    subject        = relationship("Subject", back_populates='exams')
-
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
     user            = relationship("User", back_populates='exams')
 

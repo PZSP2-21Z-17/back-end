@@ -13,10 +13,6 @@ class User(BaseSchema):
     password        = Column(VARCHAR(40), nullable=False)
     e_mail          = Column(VARCHAR(50), nullable=False, unique=True)
 
-    # Children 
-    user_affs       = relationship("UserAffiliation", back_populates='user')
+    # Children
     exams           = relationship("Exam", back_populates='user')
     tasks           = relationship("Task", back_populates='user')
-
-    # That Many-To-Many
-    subjects        = relationship("Subject", secondary='user_affiliation', back_populates='users', overlaps="user_affs,user,subject")
