@@ -34,14 +34,11 @@ def one(exam_id: int, exam_manager: ExamManager = Depends(ExamManager)):
         raise HTTPUnauthorized()
 
 
-@router.post("/generate/")
+@router.post("/generate/", response_model=ExamModel)
 def generate(exam_generate:ExamGenerate, exam_manager: ExamManager = Depends(ExamManager)):
     try:
         if exam_generate.tasks_per_exam > len(exam_generate.task_ids):
             raise HTTPBadRequest()
-
-        exam_manager.generate(exam_generate)
-
-        return "dupa"
+        return exam_manager.generate(exam_generate)
     except ManagerError:
         raise HTTPUnauthorized()
