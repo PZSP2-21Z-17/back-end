@@ -70,8 +70,8 @@ def create_with_answers(task_with_answers: TaskCreateWithAnswers, task_manager: 
 @router.get("/find_by_tags", response_model=List[TaskWithAnswers])
 def find_by_tags(
     tags: List[int] = Query([]),
-    search_string: str = Query(''),
-    subject_code: str = Query(''),
+    search_string: str = Query(None),
+    subject_code: str = Query(None),
     offset: int = Query(0),
     task_manager: TaskManager = Depends(TaskManager)
 ):
