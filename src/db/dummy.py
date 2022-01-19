@@ -1,5 +1,5 @@
-import datetime
-from time import mktime, strftime, strptime
+from datetime import datetime
+from time import mktime, strptime
 from sqlalchemy.orm.session import Session
 from src.db.database import databaseSessionMaker
 
@@ -13,7 +13,6 @@ from .schemas.tag import Tag
 from .schemas.user_aff import UserAffiliation
 from .schemas.tag_aff import TagAffiliation
 from .schemas.task_aff import TaskAffiliation
-from datetime import datetime
 from random import randint, random
 
 def dlerp(min, max, t, fmt):
