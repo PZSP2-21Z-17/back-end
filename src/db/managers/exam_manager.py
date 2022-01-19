@@ -1,5 +1,4 @@
 from random import sample
-from distutils.log import error
 from typing import List
 from fastapi import Depends
 from sqlalchemy.orm import Session
