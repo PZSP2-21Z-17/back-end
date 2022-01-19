@@ -11,7 +11,7 @@ class Exam(BaseSchema):
     exam_id         = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     date_of_exam    = Column(DateTime, nullable=False)
     commentary      = Column(VARCHAR(100))
-
+    description     = Column(VARCHAR(2000))
     # Parents
     subject_code    = Column(VARCHAR(5), ForeignKey('subject.subject_code'), nullable=False)
     subjects        = relationship("Subject", back_populates='exams')

@@ -45,14 +45,14 @@ def fill():
         db_subject = Subject(**dict(zip(fields, d)))
         db.add(db_subject)
     # Exams
-    fields = ['exam_id', 'date_of_exam', 'commentary', 'subject_code', 'author_id']
+    fields = ['exam_id', 'date_of_exam', 'commentary', 'description', 'subject_code', 'author_id']
     data = [
-        ['1', datetime.strptime('01-01-2020', '%d-%m-%Y'), 'Kolos 1', 'PZSP1', '1'],
-        ['2', datetime.strptime('02-01-2020', '%d-%m-%Y'), 'Exam 1', 'PZSP2', '3'],
-        ['3', datetime.strptime('03-01-2020', '%d-%m-%Y'), 'Bul 1', 'PZSP3', '2'],
-        ['4', datetime.strptime('01-04-2020', '%d-%m-%Y'), 'Kolos 2', 'PZSP1', '4'],
-        ['5', datetime.strptime('02-04-2020', '%d-%m-%Y'), 'Exam 2', 'PZSP2', '2'],
-        ['6', datetime.strptime('03-04-2020', '%d-%m-%Y'), 'Bul 2', 'PZSP3', '3'],
+        ['1', datetime.strptime('01-01-2020', '%d-%m-%Y'), 'Kolos 1', 'Alchemy, It is the scientific technique of understanding the structure of matter,', 'PZSP1', '1'],
+        ['2', datetime.strptime('02-01-2020', '%d-%m-%Y'), 'Exam 1', 'decomposing it, and then reconstructing it.', 'PZSP2', '3'],
+        ['3', datetime.strptime('03-01-2020', '%d-%m-%Y'), 'Bul 1', 'If performed skillfully, it is even possible to create gold out of lead.', 'PZSP3', '2'],
+        ['4', datetime.strptime('01-04-2020', '%d-%m-%Y'), 'Kolos 2', 'However, as it is a science, there are some natural principles in place.', 'PZSP1', '4'],
+        ['5', datetime.strptime('02-04-2020', '%d-%m-%Y'), 'Exam 2', 'Only one thing can be created from something else of a certain mass.', 'PZSP2', '2'],
+        ['6', datetime.strptime('03-04-2020', '%d-%m-%Y'), 'Bul 2', 'This is the Principle of Equivalent Exchange. ', 'PZSP3', '3'],
     ]
     for d in data:
 
@@ -79,7 +79,28 @@ def fill():
         db.add(db_group)
     # Tasks
     fields = ['task_id', 'contents', 'score', 'date_creation', 'is_visible', 'subject_code', 'author_id']
-    data = [[i, 'Raise left hand', randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', f'PZSP{randint(1, 3)}', randint(1, 4)] for i in range(1, 19)]
+
+    task_contents = ['Read 177013',
+                    'Hunt down the furries',
+                    'Commit Genocide',
+                    'Get Adolf some juice', 
+                    'Go on a Crusade ', 
+                    'Make a Gachi mixtape',
+                    'Fight for inhuman rights', 
+                    'Abolish the Monarchy', 
+                    'Play a game of Dungeons and Dragons', 
+                    'See the end',
+                    'Enroll wilingly on POFA', 
+                    'Become the Dziekan', 
+                    'Finish making the archers game in react', 
+                    'Give your friend the vodka you owe him', 
+                    'Don`t wrestle with SCP-089', 
+                    'Finish all terraria bosses in one hour', 
+                    'Become the pope for funsies', 
+                    'Become the Gachi playlist',
+                    'Go on a party with the Pope']
+    
+    data = [[i, task_contents[i], randint(1, 10), dlerp('01-10-2019', '01-12-2019', random(), '%d-%m-%Y'), 'Y', f'PZSP{randint(1, 3)}', randint(1, 4)] for i in range(1, 19)]
     for d in data:
         db_task = Task(**dict(zip(fields, d)))
         db.add(db_task)
