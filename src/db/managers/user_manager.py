@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DatabaseError
 
 from src.dependencies import get_db
@@ -25,7 +26,7 @@ class UserManager:
     def login(self, user: UserLogin):
         try:
             db_user = self.db.query(User).filter(User.password == user.password).filter(User.e_mail == user.e_mail).one()
-        except DatabaseError as error:
+        except (Exception, NoResultFound) as error:
             raise error
         return db_user
 
