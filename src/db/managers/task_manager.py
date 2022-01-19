@@ -119,7 +119,8 @@ class TaskManager:
                 label('id', cast(Tag.tag_id, String)),
                 label('name', Tag.name)
             )
-            query = subjects.union(tags).order_by(desc(func.similarity('name', search_string)))
+            query = subjects.union(tags).order_by(desc(func.similarity(literal_column('name'), search_string)))
+            print(str(query))
             return query.all()
         except DatabaseError as error:
             raise error
