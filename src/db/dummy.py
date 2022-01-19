@@ -110,12 +110,72 @@ def fill():
 
 
     # Answers
-    fields = ['answer_id', 'content', 'is_correct', 'task_id']
-    content = ['yes', 'no', 'proceed']
-    data = [[i, content[i%3], 'Y' if randint(0, 1) == 1 else 'N', i//3 + 1] for i in range(1, 54)]
-    for d in data:
-        db_answer = Answer(**dict(zip(fields, d)))
-        db.add(db_answer)
+    answer_fields = ['task_id', 'content', 'is_correct']
+    answer_data = [
+        (1, [
+            ("2", 'N'),
+            ("4", 'Y'),
+            ("6", 'N')
+        ]),
+        (2, [
+            ("~3.14", 'Y'),
+            ("~2.78", 'N'),
+            ("3", 'N'),
+            ("4", 'N')
+        ]),
+        (3, [
+            ("1", 'N'),
+            ("3", 'Y'),
+            ("4", 'N')
+        ]),
+        (4, [
+            ("1 kg", 'N'),
+            ("1 brick", 'Y'),
+            ("2 kg", 'Y')
+        ]),
+        (5, [
+            ("Reminder of the inevitability of death.", 'Y'),
+            ("Make the most of the present time and give little thought to the future.", 'N'),
+            ("Gibberish.", 'N')
+        ]),
+        (6, [
+            ("Vasco Da Gama", 'N'),
+            ("Christopher Columbus", 'Y'),
+            ("Benjamin Franklin", 'N'),
+            ("Nicole Kidman", 'N')
+        ]),
+        (7, [
+            ("3,858,920", 'N'),
+            ("0", 'Y'),
+            ("All of them", 'N')
+        ]),
+        (8, [
+            ("Development, the creation of software itself. Operations, the deployment and management of software.", 'Y'),
+            ("Development Operations, list of procedures used by developers.", 'N'),
+            ("Mistake made by a developer, a 'dev oops'.", 'N')
+        ]),
+        (9, [
+            ("Object Reliant Modularity", 'N'),
+            ("Object Relational Mapping", 'Y'),
+            ("Objective Research Management", 'N')
+        ]),
+        (10, [
+            ("Asia", 'Y'),
+            ("Africa", 'N'),
+            ("Europe", 'N'),
+            ("North America", 'N'),
+            ("South America", 'N'),
+            ("Australia/Oceania", 'N'),
+            ("Antarctica", 'N')
+        ]),
+    ]
+    for i in range(20):
+        answer_data.append([11+i, [("Right answer", 'Y'), ("Wrong answer", 'N')]])
+    
+    for (task_id, contents) in answer_data:
+        for (content, is_correct) in contents:
+            db_answer = Answer(**dict(zip(answer_fields, [task_id, content, is_correct])))
+            db.add(db_answer)
 
 
 
@@ -164,20 +224,14 @@ def fill():
     # Task Affiliations
     task_aff_fields = ['exam_id', 'group_nr', 'nr_on_sheet', 'task_id']
     task_aff_data = [
-        (
-            1,
-            [
-                (1, [5, 7, 10]),
-                (2, [10, 6, 5]),
-            ]
-        ),
-        (
-            2,
-            [
-                (1, [1, 3, 4, 9]),
-                (2, [8, 2, 1, 4]),
-            ]
-        )
+        (1, [
+            (1, [5, 7, 10]),
+            (2, [10, 6, 5]),
+        ]),
+        (2, [
+            (1, [1, 3, 4, 9]),
+            (2, [8, 2, 1, 4]),
+        ])
     ]
     for (exam_id, group_nrs) in task_aff_data:
         for (group_nr, task_ids) in group_nrs:
