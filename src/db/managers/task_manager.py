@@ -119,8 +119,11 @@ class TaskManager:
                 label('id', cast(Tag.tag_id, String)),
                 label('name', Tag.name)
             )
-            query = subjects.union(tags).order_by(desc(func.similarity(literal_column('name'), search_string)))
-            print(str(query))
+            query = subjects.union(tags).\
+                filter(func.similarity(literal_column('name'), search_string) > 0.001).\
+                order_by(desc(func.similarity(literal_column('name'), search_string))).\
+                limit(limit).\
+                offset(offset*limit)
             return query.all()
         except DatabaseError as error:
             raise error
