@@ -11,9 +11,9 @@ class Subject(BaseSchema):
     name            = Column(VARCHAR(40), nullable=False, unique=True)
 
     # Children 
-    user_affs       = relationship("UserAffiliation", back_populates='subjects')
-    exams           = relationship("Exam", back_populates='subjects')
-    tasks           = relationship("Task", back_populates='subjects')
+    user_affs       = relationship("UserAffiliation", back_populates='subject')
+    exams           = relationship("Exam", back_populates='subject')
+    tasks           = relationship("Task", back_populates='subject')
 
     # That Many-To-Many
     users           = relationship("User", secondary='user_affiliation', back_populates='subjects', overlaps="user_affs")

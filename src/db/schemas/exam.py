@@ -14,10 +14,10 @@ class Exam(BaseSchema):
     description     = Column(VARCHAR(2000))
     # Parents
     subject_code    = Column(VARCHAR(5), ForeignKey('subject.subject_code'), nullable=False)
-    subjects        = relationship("Subject", back_populates='exams')
+    subject        = relationship("Subject", back_populates='exams')
 
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
-    users           = relationship("User", back_populates='exams')
+    user            = relationship("User", back_populates='exams')
 
     # Children
     groups          = relationship("Group", back_populates='exams')

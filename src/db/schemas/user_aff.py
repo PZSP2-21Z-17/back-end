@@ -13,7 +13,7 @@ class UserAffiliation(BaseSchema):
     permission_level    = Column(Integer, nullable=False) 
 
     # Parents
-    subjects            = relationship("Subject", back_populates='user_affs', overlaps="users")
-    users               = relationship("User", back_populates='user_affs', overlaps="users")
+    subject             = relationship("Subject", back_populates='user_affs', overlaps="users")
+    user                = relationship("User", back_populates='user_affs', overlaps="users")
 
 

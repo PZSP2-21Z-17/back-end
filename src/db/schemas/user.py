@@ -14,9 +14,9 @@ class User(BaseSchema):
     e_mail          = Column(VARCHAR(50), nullable=False, unique=True)
 
     # Children 
-    user_affs       = relationship("UserAffiliation", back_populates='users', overlaps="users")
-    exams           = relationship("Exam", back_populates='users')
-    tasks           = relationship("Task", back_populates='users')
+    user_affs       = relationship("UserAffiliation", back_populates='user')
+    exams           = relationship("Exam", back_populates='user')
+    tasks           = relationship("Task", back_populates='user')
 
     # That Many-To-Many
-    subjects        = relationship("Subject", secondary='user_affiliation', back_populates='users', overlaps="user_affs,users,subjects")
+    subjects        = relationship("Subject", secondary='user_affiliation', back_populates='users', overlaps="user_affs,user,subject")

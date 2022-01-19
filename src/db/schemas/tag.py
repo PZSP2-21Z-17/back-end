@@ -12,3 +12,4 @@ class Tag(BaseSchema):
 
     # Children
     tag_affs        = relationship("TagAffiliation", back_populates='tags')
+    tasks           = relationship("Task", secondary='tag_affiliation', back_populates='tags', overlaps="tag_affs,tags,tasks")

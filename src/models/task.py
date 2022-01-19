@@ -35,7 +35,7 @@ class TaskCreate(BaseModel):
 class TaskCreateWithAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
 
-class TaskWithAnswersTaskSubject(TaskModel):
+class TaskWithAnswersTagsSubject(TaskModel):
     answers: List[AnswerModel]
     tags: List[TagModel]
     subject: SubjectModel
