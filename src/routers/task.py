@@ -79,3 +79,14 @@ def find(
         return task_manager.find(tags, search_string, subject_code, offset)
     except ManagerError:
         raise HTTPUnauthorized()
+
+@router.get("/search_tips", response_model=List[SearchTip])
+def search_tips(
+    search_string: str = Query(None),
+    offset: int = Query(0),
+    task_manager: TaskManager = Depends(TaskManager)
+):
+    try:
+        return task_manager.search_tips(search_string, offset)
+    except ManagerError:
+        raise HTTPUnauthorized()

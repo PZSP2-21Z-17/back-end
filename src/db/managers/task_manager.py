@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import Depends
-from sqlalchemy import func
-from sqlalchemy.sql import label, case, any_, desc
+from sqlalchemy import func, select, literal_column, String, literal
+from sqlalchemy.sql import label, case, any_, desc, cast
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
 
@@ -10,6 +10,7 @@ from src.db.schemas.task import Task
 from src.db.schemas.answer import Answer
 from src.db.schemas.tag_aff import TagAffiliation
 from src.db.schemas.tag import Tag
+from src.db.schemas.subject import Subject
 
 from src.models.task import TaskBase, TaskModel, TaskCreateWithAnswers, TaskCreate
 
@@ -106,4 +107,20 @@ class TaskManager:
         except DatabaseError as error:
             raise error
 
+    def search_tips(self, search_string: str, offset: int = 0, limit: int = 25):
+        try:
+            subjects = self.db.query(
+                literal('subject').label('type'),
+                label('id', Subject.subject_code),
+                label('name', Subject.name)
+            )
+            tags = self.db.query(
+                literal('tag').label('type'),
+                label('id', cast(Tag.tag_id, String)),
+                label('name', Tag.name)
+            )
+            query = subjects.union(tags).order_by(desc(func.similarity('name', search_string)))
+            return query.all()
+        except DatabaseError as error:
+            raise error
 

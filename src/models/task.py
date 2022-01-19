@@ -2,6 +2,9 @@ from datetime import datetime
 from typing import List
 from pydantic import BaseModel
 
+from src.models.subject import SubjectModel
+from src.models.tag import TagModel
+
 from .answer import AnswerCreateInTask, AnswerModel
 
 class TaskBase(BaseModel):
@@ -31,3 +34,13 @@ class TaskCreate(BaseModel):
 
 class TaskCreateWithAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
+
+class TaskWithAnswersTaskSubject(TaskModel):
+    answers: List[AnswerModel]
+    tags: List[TagModel]
+    subject: SubjectModel
+
+class SearchTip(BaseModel):
+    type: str
+    id: str
+    name: str
