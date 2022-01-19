@@ -10,7 +10,7 @@ class Exam(BaseSchema):
     # Main fields
     exam_id         = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     date_of_exam    = Column(DateTime, nullable=False)
-    commentary      = Column(VARCHAR(100))
+    content         = Column(VARCHAR(100))
     description     = Column(VARCHAR(2000))
     # Parents
     author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)

@@ -8,7 +8,7 @@ class Tag(BaseSchema):
     __tablename__   = 'tag'
     # Main fields
     tag_id          = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    name            = Column(VARCHAR(20), nullable=False, unique=True)
+    name            = Column(VARCHAR(100), nullable=False, unique=True)
 
     # Children
     tag_affs        = relationship("TagAffiliation", back_populates='tags')

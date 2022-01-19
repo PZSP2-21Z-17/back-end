@@ -14,7 +14,7 @@ class TaskBase(BaseModel):
         orm_mode = True
 
 class TaskModel(TaskBase):
-    contents: str
+    content: str
     date_creation: datetime
     is_visible: str
     subject_code: str
@@ -24,7 +24,7 @@ class TaskWithAnswers(TaskModel):
     answers: List[AnswerModel]
 
 class TaskCreate(BaseModel):
-    contents: str
+    content: str
     date_creation: datetime
     is_visible: str
     subject_code: str

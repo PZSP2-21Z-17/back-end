@@ -9,7 +9,7 @@ class Task(BaseSchema):
     __tablename__   = 'task'
     # Main fields
     task_id         = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    contents        = Column(VARCHAR(500), nullable=False)
+    content         = Column(VARCHAR(500), nullable=False)
     date_creation   = Column(DateTime, nullable=False)
     is_visible      = Column(CHAR(1), nullable=False)
 

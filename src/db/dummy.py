@@ -57,7 +57,7 @@ def fill():
 
 
     # Exams
-    exam_fields = ['date_of_exam', 'commentary', 'description', 'author_id']
+    exam_fields = ['date_of_exam', 'content', 'description', 'author_id']
     exam_data = [
         [datetime.strptime('04-12-2021', '%d-%m-%Y'), 'Exam 1', 'Literature, history, religion and geography', 3],
         [datetime.strptime('13-01-2022', '%d-%m-%Y'), 'Exam 2', 'Mathematics and Information Technology', 3],
@@ -82,7 +82,7 @@ def fill():
 
 
 
-    task_fields = ['contents', 'date_creation', 'is_visible', 'subject_code', 'author_id']
+    task_fields = ['content', 'date_creation', 'is_visible', 'subject_code', 'author_id']
     task_data = [
         ["What's 2 + 2?", 'MATH', 2],
         ["What's the approximated value of π?", 'MATH', 2],
@@ -182,14 +182,14 @@ def fill():
     # Tags
     tag_fields = ['name']
     tag_data = [
-        'easy',
-        'medium',
-        'hard',
-        'yes/no',
-        'unusual',
-        'typical',
+        'difficulty easy',
+        'difficulty medium',
+        'difficulty hard',
+        'yes/no answers',
+        'unusual question',
+        'typical question',
         'teachers favorite',
-        'placeholder'
+        'placeholder tag'
     ]
     for d in tag_data:
         db_tag = Tag(**dict(zip(tag_fields, [d])))

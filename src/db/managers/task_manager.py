@@ -102,8 +102,8 @@ class TaskManager:
                 query = query.filter(Task.subject_code == subject_code)
             if search_string is not None:
                 query = query.\
-                    filter(func.similarity(Task.contents, search_string) > 0.001).\
-                    order_by(desc(func.similarity(Task.contents, search_string)))
+                    filter(func.similarity(Task.content, search_string) > 0.001).\
+                    order_by(desc(func.similarity(Task.content, search_string)))
             query = query.limit(limit).offset(offset*limit)
             return query.all()
         except DatabaseError as error:
