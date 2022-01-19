@@ -88,7 +88,7 @@ class TaskManager:
             raise error
         return db_task
     
-    def find_by_tags(self, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
+    def find(self, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
         try:
             query = self.db.query(Task)
             if len(tags) > 0:
