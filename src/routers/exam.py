@@ -7,28 +7,41 @@ from src.db.managers.exceptions import ManagerError
 from src.dependencies import get_db
 from src.db.schemas.exam import Exam
 from src.models.exam import *
-from src.routers.exceptions import HTTPUnauthorized
+from src.routers.exceptions import HTTPUnauthorized, HTTPBadRequest
 
 router = APIRouter()
 
 @router.post("/create/", response_model=ExamModel)
-def create(answer: ExamCreate, answer_manager: ExamManager = Depends(ExamManager)):
+def create(exam: ExamCreate, exam_manager: ExamManager = Depends(ExamManager)):
     try:
-        return answer_manager.add(Exam(**answer.dict()))
+        return exam_manager.add(Exam(**exam.dict()))
     except ManagerError:
         raise HTTPUnauthorized()
 
 @router.get("/all/", response_model=List[ExamModel])
-def all(answer_manager: ExamManager = Depends(ExamManager)):
+def all(exam_manager: ExamManager = Depends(ExamManager)):
     try:
-        a = answer_manager.all()
+        a = exam_manager.all()
         return a
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/one/{answer_id}", response_model=ExamModel)
-def one(answer_id: int, answer_manager: ExamManager = Depends(ExamManager)):
+@router.get("/one/{exam_id}", response_model=ExamModel)
+def one(exam_id: int, exam_manager: ExamManager = Depends(ExamManager)):
     try:
-        return answer_manager.byId(answer_id)
+        return exam_manager.byId(exam_id)
+    except ManagerError:
+        raise HTTPUnauthorized()
+
+
+@router.post("/generate/")
+def generate(exam_generate:ExamGenerate, exam_manager: ExamManager = Depends(ExamManager)):
+    try:
+        if exam_generate.tasks_per_exam > len(exam_generate.task_ids):
+            raise HTTPBadRequest()
+
+        exam_manager.generate(exam_generate)
+
+        return "dupa"
     except ManagerError:
         raise HTTPUnauthorized()
