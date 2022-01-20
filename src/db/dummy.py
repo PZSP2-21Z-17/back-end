@@ -107,7 +107,7 @@ def fill():
 
     [task_contents, task_subject_code, task_author_id] = [list(e) for e in zip(*task_data)]
     task_date_creation = [date_lerp('01-10-2019', '01-12-2021', i / (task_count - 1)) for i in range(task_count)]
-    task_is_visible = ['Y' if i % 2 == 0 else 'N' for i in range(task_count)]
+    task_is_visible = ['N' if i in (0, 1, 2, 6, 9) else 'Y' for i in range(task_count)]
     
     for d in zip(task_contents, task_date_creation, task_is_visible, task_subject_code, task_author_id):
         db_task = Task(**dict(zip(task_fields, d)))
