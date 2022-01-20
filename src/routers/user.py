@@ -24,7 +24,7 @@ def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
 def login(user: UserLogin, response: Response, user_manager: UserManager = Depends(UserManager)):
     try:
         user = user_manager.login(user)
-        response.set_cookie(COOKIE_USER_ID, user.user_id, max_age=15*60, secure=True, httponly=True, samesite="none")
+        response.set_cookie(COOKIE_USER_ID, user.user_id, max_age=10*60*60, secure=True, httponly=True, samesite="none")
         return
     except ManagerError:
         raise HTTPUnauthorized()
