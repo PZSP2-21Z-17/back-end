@@ -1,5 +1,5 @@
-from http.client import responses
-from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from typing import Optional
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, Request
 from sqlalchemy.orm import Session
 from src.db.managers.user_manager import UserManager
 from src.db.managers.exceptions import ManagerError
@@ -34,8 +34,7 @@ def logout(response: Response):
     response.set_cookie(COOKIE_USER_ID, '', max_age=0, secure=True, httponly=True)
     
 @router.get("/is_logged/", response_model=UserLookup)
-def is_logged(request: Request, user_manager: UserManager = Depends(UserManager)):
-    user_id = request.cookies[COOKIE_USER_ID]
+def is_logged(user_id: Optional[str] = Cookie(None), user_manager: UserManager = Depends(UserManager)):
     if user_id is not None:
         return user_manager.lookup(user_id)
     return HTTPUnauthorized()
