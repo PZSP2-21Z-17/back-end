@@ -1,13 +1,14 @@
-from sqlalchemy import Column
+from sqlalchemy import Column, func, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Integer, VARCHAR
+from sqlalchemy.dialects.postgresql import UUID
 
 from src.db.database import BaseModel as BaseSchema
 
 class User(BaseSchema):
     __tablename__   = 'user'
     # Main fields
-    user_id         = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    user_id         = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
     first_name      = Column(VARCHAR(20), nullable=False)
     last_name       = Column(VARCHAR(25), nullable=False)
     password        = Column(VARCHAR(40), nullable=False)

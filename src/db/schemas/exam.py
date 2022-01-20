@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime, Integer, VARCHAR
+from sqlalchemy.dialects.postgresql import UUID
 
 from src.db.database import BaseModel as BaseSchema
 
@@ -13,7 +14,7 @@ class Exam(BaseSchema):
     content         = Column(VARCHAR(100))
     description     = Column(VARCHAR(2000))
     # Parents
-    author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
+    author_id       = Column(UUID(as_uuid=True), ForeignKey('user.user_id'), nullable=False)
     user            = relationship("User", back_populates='exams')
 
     # Children

@@ -26,15 +26,21 @@ def fill():
 
 
     # Users
-    user_fields = ['password', 'first_name', 'last_name', 'e_mail']
+    uuids = [
+        '0b851b8b-2dfe-452b-9e06-968700cbbc72',
+        'e6912348-3270-422d-814f-e516b1af600a',
+        '7aac0ee0-6ac2-4854-9db6-5438793b0ea9',
+        '48b3d9d0-e1a4-4596-bbe9-888568829a98'
+    ]
+    user_fields = ['user_id', 'password', 'first_name', 'last_name', 'e_mail']
     user_data = [
         ['ph', 'Place', 'Holder', 'placeholder@gmail.com'],
         ['js', 'Janusz', 'Szczepański', 'jszczep@gmail.com'],
         ['ag', 'Adam', 'Górecki', 'agor@gmail.com'],
         ['ju', 'Julian', 'Urbański', 'jurban@gmail.com'],
     ]
-    for d in user_data:
-        db_user = User(**dict(zip(user_fields, d)))
+    for (uuid, d) in zip(uuids, user_data):
+        db_user = User(**dict(zip(user_fields, [uuid, *d])))
         db.add(db_user)
 
 
@@ -59,8 +65,8 @@ def fill():
     # Exams
     exam_fields = ['date_of_exam', 'content', 'description', 'author_id']
     exam_data = [
-        [datetime.strptime('04-12-2021', '%d-%m-%Y'), 'Exam 1', 'Literature, history, religion and geography', 3],
-        [datetime.strptime('13-01-2022', '%d-%m-%Y'), 'Exam 2', 'Mathematics and Information Technology', 3],
+        [datetime.strptime('04-12-2021', '%d-%m-%Y'), 'Exam 1', 'Literature, history, religion and geography', uuids[2]],
+        [datetime.strptime('13-01-2022', '%d-%m-%Y'), 'Exam 2', 'Mathematics and Information Technology', uuids[2]],
     ]
     for d in exam_data:
         db_exam = Exam(**dict(zip(exam_fields, d)))
@@ -84,19 +90,19 @@ def fill():
 
     task_fields = ['content', 'date_creation', 'is_visible', 'subject_code', 'author_id']
     task_data = [
-        ["What's 2 + 2?", 'MATH', 2],
-        ["What's the approximated value of π?", 'MATH', 2],
-        ["Jake had 4 chocolates. He ate 1. How many does he have now?", 'MATH', 2],
-        ["A brick weights 1 kg and 1/2 of a brick. How much does a brick weight?", 'MATH', 2],
-        ["What does 'memento mori' mean?", 'LIT', 3],
-        ["Who discovered America?",'HIS', 3],
-        ["How many animals did Moses bring into The Arc?", 'REL', 3],
-        ["What does DevOps mean?", 'IT', 2],
-        ["What does ORM stand for?", 'IT' , 2],
-        ["On which continent is the country of Bhutan?", 'GEO', 4]
+        ["What's 2 + 2?", 'MATH', uuids[1]],
+        ["What's the approximated value of π?", 'MATH', uuids[1]],
+        ["Jake had 4 chocolates. He ate 1. How many does he have now?", 'MATH', uuids[1]],
+        ["A brick weights 1 kg and 1/2 of a brick. How much does a brick weight?", 'MATH', uuids[1]],
+        ["What does 'memento mori' mean?", 'LIT', uuids[2]],
+        ["Who discovered America?",'HIS', uuids[2]],
+        ["How many animals did Moses bring into The Arc?", 'REL', uuids[2]],
+        ["What does DevOps mean?", 'IT', uuids[1]],
+        ["What does ORM stand for?", 'IT' , uuids[1]],
+        ["On which continent is the country of Bhutan?", 'GEO', uuids[3]]
     ]
     for _ in range(20):
-        task_data.append(["Placeholder.", 'PLHD', 1])
+        task_data.append(["Placeholder.", 'PLHD', uuids[0]])
     task_count = len(task_data)
 
     [task_contents, task_subject_code, task_author_id] = [list(e) for e in zip(*task_data)]
@@ -238,6 +244,8 @@ def fill():
             for (nr_on_sheet, task_id) in zip(range(1, len(task_ids)+1), task_ids):
                 db_task = TaskAffiliation(**dict(zip(task_aff_fields, [exam_id, group_nr, nr_on_sheet, task_id])))
                 db.add(db_task)
+
+
 
     # Enough.
     db.commit()

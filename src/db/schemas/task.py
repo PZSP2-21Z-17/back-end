@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime, Integer, VARCHAR, CHAR
+from sqlalchemy.dialects.postgresql import UUID
 
 from src.db.database import BaseModel as BaseSchema
 
@@ -17,7 +18,7 @@ class Task(BaseSchema):
     subject_code    = Column(VARCHAR(5), ForeignKey('subject.subject_code'), nullable=False)
     subject         = relationship("Subject", back_populates='tasks')
     
-    author_id       = Column(Integer, ForeignKey('user.user_id'), nullable=False)
+    author_id       = Column(UUID(as_uuid=True), ForeignKey('user.user_id'), nullable=False)
     user            = relationship("User", back_populates='tasks')
 
     # Children 
