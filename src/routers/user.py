@@ -20,14 +20,14 @@ def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.post("/login/", response_model=bool)
+@router.post("/login/")
 def login(user: UserLogin, response: Response, user_manager: UserManager = Depends(UserManager)):
     try:
         user = user_manager.login(user)
         response.set_cookie(COOKIE_USER_ID, user.user_id, max_age=15*60, secure=True, httponly=True)
-        return True
+        return
     except ManagerError:
-        return False
+        raise HTTPUnauthorized()
 
 @router.post("/logout/")
 def logout(response: Response):
@@ -38,6 +38,7 @@ def is_logged(user_id: Optional[str] = Cookie(None), user_manager: UserManager =
     try:
         if user_id is not None:
             return user_manager.lookup(user_id)
+        else:
+            raise HTTPUnauthorized()
     except ManagerError:
         raise HTTPUnauthorized()
-    raise HTTPUnauthorized()
