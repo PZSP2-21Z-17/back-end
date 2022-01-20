@@ -14,6 +14,8 @@ from .schemas.tag_aff import TagAffiliation
 from .schemas.task_aff import TaskAffiliation
 from random import randint, random
 
+PLACEHOLDERS = 30
+
 def date_lerp(min, max, t, fmt = '%d-%m-%Y'):
     min = mktime(strptime(min, fmt))
     max = mktime(strptime(max, fmt))
@@ -55,6 +57,7 @@ def fill():
         ['REL', 'Religion'],
         ['IT', 'Information Technology'],
         ['GEO', 'Geography'],
+        ['PHYS', 'Physics']
     ]
     for d in subject_data:
         db_subject = Subject(**dict(zip(subject_fields, d)))
@@ -66,7 +69,7 @@ def fill():
     exam_fields = ['date_of_exam', 'content', 'description', 'author_id']
     exam_data = [
         [datetime.strptime('04-12-2021', '%d-%m-%Y'), 'Exam 1', 'Literature, history, religion and geography', uuids[2]],
-        [datetime.strptime('13-01-2022', '%d-%m-%Y'), 'Exam 2', 'Mathematics and Information Technology', uuids[2]],
+        [datetime.strptime('13-01-2022', '%d-%m-%Y'), 'Exam 2', 'Mathematics, Physics and Information Technology', uuids[2]],
     ]
     for d in exam_data:
         db_exam = Exam(**dict(zip(exam_fields, d)))
@@ -90,18 +93,21 @@ def fill():
 
     task_fields = ['content', 'date_creation', 'is_visible', 'subject_code', 'author_id']
     task_data = [
-        ["What's 2 + 2?", 'MATH', uuids[1]],
-        ["What's the approximated value of π?", 'MATH', uuids[1]],
-        ["Jake had 4 chocolates. He ate 1. How many does he have now?", 'MATH', uuids[1]],
+        ["What's `2 + 2`?", 'MATH', uuids[1]],
+        [r"What's the approximated value of \(\pi\)?", 'MATH', uuids[1]],
+        ["Jake had __4__ chocolates. He ate __1__. How many does he have __now__?", 'MATH', uuids[1]],
         ["A brick weights 1 kg and 1/2 of a brick. How much does a brick weight?", 'MATH', uuids[1]],
-        ["What does 'memento mori' mean?", 'LIT', uuids[2]],
-        ["Who discovered America?",'HIS', uuids[2]],
+        ["What does '*memento mori*' mean?", 'LIT', uuids[2]],
+        ["Who discovered **America**?",'HIS', uuids[2]],
         ["How many animals did Moses bring into The Arc?", 'REL', uuids[2]],
-        ["What does DevOps mean?", 'IT', uuids[1]],
-        ["What does ORM stand for?", 'IT' , uuids[1]],
-        ["On which continent is the country of Bhutan?", 'GEO', uuids[3]]
+        ["What does '*DevOps*' mean?", 'IT', uuids[1]],
+        ["What does '*ORM*' stand for?", 'IT' , uuids[1]],
+        ["Where is the country of Bhutan?", 'GEO', uuids[3]],
+        ["What equation is *Albert Einstein* known for?", 'PHYS', uuids[1]],
+        ["What's the equation of position over time?", 'PHYS', uuids[1]]
     ]
-    for _ in range(20):
+    task_count_nph = len(task_data)
+    for _ in range(PLACEHOLDERS):
         task_data.append(["Placeholder.", 'PLHD', uuids[0]])
     task_count = len(task_data)
 
@@ -118,54 +124,54 @@ def fill():
     # Answers
     answer_fields = ['task_id', 'content', 'is_correct']
     answer_data = [
-        (1, [
+        [
             ("2", 'N'),
             ("4", 'Y'),
             ("6", 'N')
-        ]),
-        (2, [
+        ],
+        [
             ("~3.14", 'Y'),
             ("~2.78", 'N'),
             ("3", 'N'),
             ("4", 'N')
-        ]),
-        (3, [
+        ],
+        [
             ("1", 'N'),
             ("3", 'Y'),
             ("4", 'N')
-        ]),
-        (4, [
+        ],
+        [
             ("1 kg", 'N'),
             ("1 brick", 'Y'),
             ("2 kg", 'Y')
-        ]),
-        (5, [
+        ],
+        [
             ("Reminder of the inevitability of death.", 'Y'),
             ("Make the most of the present time and give little thought to the future.", 'N'),
-            ("Gibberish.", 'N')
-        ]),
-        (6, [
-            ("Vasco Da Gama", 'N'),
-            ("Christopher Columbus", 'Y'),
-            ("Benjamin Franklin", 'N'),
-            ("Nicole Kidman", 'N')
-        ]),
-        (7, [
-            ("3,858,920", 'N'),
+            ("**Gibberish.**", 'N')
+        ],
+        [
+            ("*Vasco Da Gama*", 'N'),
+            ("*Christopher Columbus*", 'Y'),
+            ("*Benjamin Franklin*", 'N'),
+            ("*Nicole Kidman*", 'N')
+        ],
+        [
+            ("3 858 920", 'N'),
             ("0", 'Y'),
             ("All of them", 'N')
-        ]),
-        (8, [
+        ],
+        [
             ("Development, the creation of software itself. Operations, the deployment and management of software.", 'Y'),
             ("Development Operations, list of procedures used by developers.", 'N'),
-            ("Mistake made by a developer, a 'dev oops'.", 'N')
-        ]),
-        (9, [
-            ("Object Reliant Modularity", 'N'),
-            ("Object Relational Mapping", 'Y'),
-            ("Objective Research Management", 'N')
-        ]),
-        (10, [
+            ("Mistake made by a developer, a '*dev oops*'.", 'N')
+        ],
+        [
+            ("'*Object Reliant Modularity*'", 'N'),
+            ("'*Object Relational Mapping*'", 'Y'),
+            ("'*Objective Research Management*'", 'N')
+        ],
+        [
             ("Asia", 'Y'),
             ("Africa", 'N'),
             ("Europe", 'N'),
@@ -173,12 +179,20 @@ def fill():
             ("South America", 'N'),
             ("Australia/Oceania", 'N'),
             ("Antarctica", 'N')
-        ]),
+        ],
+        [
+            (r"\(E=mc^{2}\)", 'Y'),
+            (r"\(e^{i\pi}=-1\)", 'N'),
+            (r"\(a^{2}+b^{2}=c^{2}\)", 'N'),
+        ],
+        [
+            (r"\(p=vt\)", 'Y'),
+            (r"\(p=\frac{v}{t}\)", 'N'),
+        ],
     ]
-    for i in range(20):
-        answer_data.append([11+i, [("Right answer", 'Y'), ("Wrong answer", 'N')]])
-    
-    for (task_id, contents) in answer_data:
+    for i in range(task_count - len(answer_data)):
+        answer_data.append([("Placeholder right answer", 'Y'), ("Placeholder wrong answer", 'N')])
+    for (task_id, contents) in zip(range(1, len(answer_data) + 1), answer_data):
         for (content, is_correct) in contents:
             db_answer = Answer(**dict(zip(answer_fields, [task_id, content, is_correct])))
             db.add(db_answer)
@@ -206,21 +220,23 @@ def fill():
     # Tag Affiliations
     tag_aff_fields = ['task_id', 'tag_id']
     tag_aff_data = [
-        [1, [1, 6]],
-        [2, [1, 6]],
-        [3, [2, 6, 7]],
-        [4, [3, 6]],
-        [5, [3, 5]],
-        [6, [1, 6]],
-        [7, [1, 5]],
-        [8, [2, 6, 7]],
-        [9, [1, 5]],
-        [10, [3, 5]]
+        [1, 6],
+        [1, 6],
+        [2, 6, 7],
+        [3, 6],
+        [3, 5],
+        [1, 6],
+        [1, 5],
+        [2, 6, 7],
+        [1, 5],
+        [3, 5],
+        [2, 6],
+        [1, 5]
     ]
-    for i in range(20):
-        tag_aff_data.append([11+i, [8]])
+    for i in range(task_count - len(tag_aff_data)):
+        tag_aff_data.append([8])
 
-    for (task_id, tag_ids) in tag_aff_data:
+    for (task_id, tag_ids) in zip(range(1, len(tag_aff_data) + 1), tag_aff_data):
         for tag_id in tag_ids:
             db_tag = TagAffiliation(**dict(zip(tag_aff_fields, [task_id, tag_id])))
             db.add(db_tag)
