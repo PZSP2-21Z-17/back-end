@@ -10,5 +10,4 @@ class TagModel(TagBase):
     name: str
 
 class TagCreate(BaseModel):
-    tag_id: int
     name: str
