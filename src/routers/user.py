@@ -33,8 +33,8 @@ def login(user: UserLogin, response: Response, user_manager: UserManager = Depen
 def logout(response: Response):
     response.set_cookie(COOKIE_USER_ID, '', max_age=0, secure=True, httponly=True)
     
-@router.get("/is_logged_in/", response_model=bool)
-def is_logged_in(request: Request):
+@router.get("/is_logged/", response_model=bool)
+def is_logged(request: Request):
     return request.cookies[COOKIE_USER_ID] is not None
 
 
