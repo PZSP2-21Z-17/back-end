@@ -1,4 +1,5 @@
-from random import sample
+from random import Random
+from secrets import randbits
 from typing import List
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -59,8 +60,9 @@ class ExamManager:
 
             # Tworzenie rand task_affiliation
             with self.db.begin_nested():
+                rng = Random(randbits(64))
                 for i in range(exam_generate.group_count):
-                    tasks_chosen = sample(exam_generate.task_ids, exam_generate.tasks_per_exam)
+                    tasks_chosen = rng.sample(exam_generate.task_ids, exam_generate.tasks_per_exam)
                     for sheet_nr in range(len(tasks_chosen)):
                         new_task_aff = TaskAffiliationCreate(group_nr = i+1, exam_id = created_exam.exam_id, task_id = tasks_chosen[sheet_nr], nr_on_sheet = sheet_nr + 1)
                         self.db.add(TaskAffiliation(**new_task_aff.dict()))
