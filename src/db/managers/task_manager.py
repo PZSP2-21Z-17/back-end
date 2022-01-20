@@ -129,4 +129,3 @@ class TaskManager:
             return query.all()
         except DatabaseError as error:
             raise error
-

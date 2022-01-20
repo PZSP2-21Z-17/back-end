@@ -24,6 +24,7 @@ def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
 def login(user: UserLogin, response: Response, user_manager: UserManager = Depends(UserManager)):
     try:
         user = user_manager.login(user)
+        print(user.user_id)
         response.set_cookie(COOKIE_USER_ID, user.user_id, max_age=15*60, secure=True, httponly=True)
         return
     except ManagerError:

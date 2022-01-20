@@ -26,15 +26,14 @@ class UserManager:
     def login(self, user: UserLogin):
         try:
             db_user = self.db.query(User).filter(User.password == user.password).filter(User.e_mail == user.e_mail).one()
-        except (Exception, NoResultFound) as error:
+        except (DatabaseError, NoResultFound) as error:
             raise error
         return db_user
 
     def lookup(self, user_id: str):
         try:
             db_user = self.db.query(User).filter(User.user_id == user_id).one()
-        except Exception as error:
-            print(error)
-            raise HTTPException(status_code=404)
+        except (DatabaseError, NoResultFound) as error:
+            raise error
         return db_user
 
