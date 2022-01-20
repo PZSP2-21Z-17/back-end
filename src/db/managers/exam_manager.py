@@ -31,16 +31,19 @@ class ExamManager:
             raise error
         return exam
 
-    def all(self) -> List[Exam]:
+    def all(self, user_id: str) -> List[Exam]:
         try:
-            exam = self.db.query(Exam).all()
+            exam = self.db.query(Exam).filter(Exam.author_id == user_id).all()
         except DatabaseError as error:
             raise error
         return exam
 
-    def byId(self, exam_id: int):
+    def byId(self, user_id: str, exam_id: int):
         try:
-            exam = self.db.query(Exam).filter(Exam.exam_id == exam_id).one()
+            exam = self.db.query(Exam).\
+                filter(Exam.exam_id == exam_id).\
+                filter(Exam.author_id == user_id).\
+                one()
         except DatabaseError as error:
             raise error
         return exam
