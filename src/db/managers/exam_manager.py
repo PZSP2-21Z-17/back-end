@@ -47,26 +47,23 @@ class ExamManager:
     def generate(self, exam_generate:ExamGenerate):
         try:
             # Tworzenie egzaminu
-            inner = self.db.begin_nested()
-            exam_create = ExamCreate(**exam_generate.dict())
-            created_exam = self.db.add(Exam(**exam_create.dict()))
-            inner.commit()
+            with self.db.begin_nested():
+                exam_create = ExamCreate(**exam_generate.dict())
+                created_exam = self.db.add(Exam(**exam_create.dict()))
 
             # Tworzenie grup
-            inner = self.db.begin_nested()
-            for i in range(exam_generate.group_count):
-                new_group = GroupCreate(exam_id = created_exam.exam_id, group_nr = i+1)
-                self.db.add(Group(**new_group.dict()))
-            inner.commit()
+            with self.db.begin_nested():
+                for i in range(exam_generate.group_count):
+                    new_group = GroupCreate(exam_id = created_exam.exam_id, group_nr = i+1)
+                    self.db.add(Group(**new_group.dict()))
 
             # Tworzenie rand task_affiliation
-            inner = self.db.begin_nested()
-            for i in range(exam_generate.group_count):
-                tasks_chosen = sample(exam_generate.task_ids, exam_generate.tasks_per_exam)
-                for sheet_nr in range(len(tasks_chosen)):
-                    new_task_aff = TaskAffiliationCreate(group_nr = i+1, exam_id = created_exam.exam_id, task_id = tasks_chosen[sheet_nr], nr_on_sheet = sheet_nr + 1)
-                    self.db.add(TaskAffiliation(**new_task_aff.dict()))
-            inner.commit()
+            with self.db.begin_nested():
+                for i in range(exam_generate.group_count):
+                    tasks_chosen = sample(exam_generate.task_ids, exam_generate.tasks_per_exam)
+                    for sheet_nr in range(len(tasks_chosen)):
+                        new_task_aff = TaskAffiliationCreate(group_nr = i+1, exam_id = created_exam.exam_id, task_id = tasks_chosen[sheet_nr], nr_on_sheet = sheet_nr + 1)
+                        self.db.add(TaskAffiliation(**new_task_aff.dict()))
             self.db.commit()
 
             return created_exam
