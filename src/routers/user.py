@@ -24,15 +24,14 @@ def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
 def login(user: UserLogin, response: Response, user_manager: UserManager = Depends(UserManager)):
     try:
         user = user_manager.login(user)
-        print(user.user_id)
-        response.set_cookie(COOKIE_USER_ID, user.user_id, max_age=15*60, secure=True, httponly=True)
+        response.set_cookie(COOKIE_USER_ID, user.user_id, max_age=15*60, secure=True, httponly=True, samesite="none")
         return
     except ManagerError:
         raise HTTPUnauthorized()
 
 @router.post("/logout/")
 def logout(response: Response):
-    response.set_cookie(COOKIE_USER_ID, '', max_age=0, secure=True, httponly=True)
+    response.set_cookie(COOKIE_USER_ID, '', max_age=0, secure=True, httponly=True, samesite="none")
     
 @router.get("/is_logged/", response_model=UserLookup)
 def is_logged(user_id: Optional[str] = Cookie(None), user_manager: UserManager = Depends(UserManager)):

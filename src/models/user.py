@@ -6,10 +6,13 @@ class UserBase(BaseModel):
     class Config:
         orm_mode = True
 
-class UserLookup(UserBase):
+class UserLookup(BaseModel):
     first_name: str
     last_name: str
     e_mail: str
+
+    class Config:
+        orm_mode = True
 
 class UserLogin(BaseModel):
     password: str
