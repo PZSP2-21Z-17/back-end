@@ -35,13 +35,9 @@ def logout(response: Response):
     
 @router.get("/is_logged/", response_model=UserLookup)
 def is_logged(user_id: Optional[str] = Cookie(None), user_manager: UserManager = Depends(UserManager)):
-    if user_id is not None:
-        return user_manager.lookup(user_id)
-    return HTTPUnauthorized()
-
-@router.get("/lookup/{user_id}", response_model=UserLookup)
-def lookup(user_id: int, user_manager:UserManager = Depends(UserManager)):
     try:
-        return user_manager.lookup(user_id)
+        if user_id is not None:
+            return user_manager.lookup(user_id)
     except ManagerError:
         raise HTTPUnauthorized()
+    raise HTTPUnauthorized()
