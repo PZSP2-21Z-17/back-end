@@ -18,7 +18,6 @@ class TaskModel(TaskBase):
     date_creation: datetime
     is_visible: str
     subject_code: str
-    author_id: str
 
 class TaskWithAnswers(TaskModel):
     answers: List[AnswerModel]

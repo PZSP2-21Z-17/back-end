@@ -19,7 +19,7 @@ def create(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     
     exam.author_id = user_id
@@ -34,7 +34,7 @@ def all(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     
     try:
@@ -50,7 +50,7 @@ def one(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     
     try:
@@ -66,7 +66,7 @@ def generate(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
 
     exam_generate.author_id = user_id

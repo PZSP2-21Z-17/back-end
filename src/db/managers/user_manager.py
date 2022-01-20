@@ -37,3 +37,10 @@ class UserManager:
             raise error
         return db_user
 
+    def is_user(self, user_id: str) -> bool:
+        try:
+            db_user = self.db.query(User).filter(User.user_id == user_id).one()
+        except (DatabaseError, NoResultFound) as error:
+            return False
+        return True
+

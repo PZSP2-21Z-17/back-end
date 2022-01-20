@@ -17,7 +17,7 @@ def create(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     task.author_id = user_id
     try:
@@ -31,7 +31,7 @@ def all(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         a = task_manager.all(user_id)
@@ -46,7 +46,7 @@ def one(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         return task_manager.byId(user_id, task_id)
@@ -60,7 +60,7 @@ def delete(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         return task_manager.delete(user_id, task)
@@ -74,7 +74,7 @@ def update(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         return task_manager.update(user_id, task)
@@ -89,7 +89,7 @@ def one_with_answers(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         return task_manager.one_with_answers(user_id, task_id)
@@ -102,7 +102,7 @@ def all_with_answers(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         return task_manager.all_with_answers(user_id)
@@ -116,7 +116,7 @@ def create_with_answers(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
 
     task_with_answers.author_id = user_id
@@ -135,10 +135,11 @@ def find(
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if user_manager.lookup(user_id) is None:
+    if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
-        return task_manager.find(user_id, tags, search_string, subject_code, offset)
+        res = task_manager.find(user_id, tags, search_string, subject_code, offset)
+        return res
     except ManagerError:
         raise HTTPUnauthorized()
 
