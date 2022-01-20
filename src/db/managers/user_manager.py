@@ -30,7 +30,7 @@ class UserManager:
             raise error
         return db_user
 
-    def lookup(self, user_id: int):
+    def lookup(self, user_id: str):
         try:
             db_user = self.db.query(User).filter(User.user_id == user_id).one()
         except Exception as error:
