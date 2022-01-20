@@ -18,7 +18,7 @@ class TaskModel(TaskBase):
     date_creation: datetime
     is_visible: str
     subject_code: str
-    author_id: int
+    author_id: str
 
 class TaskWithAnswers(TaskModel):
     answers: List[AnswerModel]
@@ -28,7 +28,7 @@ class TaskCreate(BaseModel):
     date_creation: datetime
     is_visible: str
     subject_code: str
-    author_id: int
+    author_id: str
 
 class TaskCreateWithAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
