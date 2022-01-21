@@ -23,7 +23,7 @@ def all(offset: int = Query(0), tag_manager: TagManager = Depends(TagManager)):
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.post("/delete/")
+@router.delete("/delete/")
 def delete(tag: TagBase,  tag_manager: TagManager = Depends(TagManager)):
     try:
         return tag_manager.delete(tag)

@@ -23,7 +23,7 @@ def all(offset: int = Query(0), subject_manager: SubjectManager = Depends(Subjec
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.post("/delete/")
+@router.delete("/delete/")
 def delete(subject: SubjectBase, subject_manager: SubjectManager = Depends(SubjectManager)):
     try:
         return subject_manager.delete(subject)
