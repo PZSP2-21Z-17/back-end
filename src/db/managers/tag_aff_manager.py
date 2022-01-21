@@ -6,6 +6,7 @@ from sqlalchemy.exc import DatabaseError
 from src.dependencies import get_db
 from src.db.schemas.tag_aff import TagAffiliation
 from src.models.answer import *
+from src.models.tag_aff import TagAffiliationBase
 
 class TagAffiliationManager:
     def __init__ (self, db: Session = Depends(get_db)):
@@ -21,10 +22,11 @@ class TagAffiliationManager:
             raise error
         return tag_aff
 
-    def all(self) -> List[TagAffiliation]:
+    def delete(self, tag_aff: TagAffiliationBase):
         try:
-            tag_affs = self.db.query(TagAffiliation).all()
+            self.db.query(TagAffiliation).\
+                filter(TagAffiliation.tag_id == tag_aff.tag_id).\
+                filter(TagAffiliation.task_id == tag_aff.task_id).\
+                delete()
         except DatabaseError as error:
             raise error
-        return tag_affs
-

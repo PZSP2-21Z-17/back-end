@@ -18,10 +18,9 @@ def create(tag_aff: TagAffiliationCreate, tag_aff_manager: TagAffiliationManager
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/all/", response_model=List[TagAffiliationModel])
-def all(tag_aff_manager: TagAffiliationManager= Depends(TagAffiliationManager)):
+@router.delete("/delete/")
+def create(tag_aff: TagAffiliationBase, tag_aff_manager: TagAffiliationManager= Depends(TagAffiliationManager)):
     try:
-        a = tag_aff_manager.all()
-        return a
+        return tag_aff_manager.delete(tag_aff)
     except ManagerError:
         raise HTTPUnauthorized()

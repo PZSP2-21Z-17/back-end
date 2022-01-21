@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 class TagAffiliationBase(BaseModel):
     task_id: int
-    tag_code: str
+    tag_id: int
 
     class Config:
         orm_mode = True
@@ -12,4 +12,4 @@ class TagAffiliationModel(TagAffiliationBase):
 
 class TagAffiliationCreate(BaseModel):
     task_id: int
-    tag_code: str
+    tag_id: int
