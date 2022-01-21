@@ -4,6 +4,7 @@ from typing import List
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
+from sqlalchemy.orm.exc import NoResultFound
 from src.db.schemas.task_aff import TaskAffiliation
 
 from src.dependencies import get_db
@@ -48,13 +49,21 @@ class ExamManager:
 
     def delete(self, user_id: UUID, exam: ExamBase):
         try:
-            query = self.db.query(Exam).\
-                filter(Exam.exam_id == exam.exam_id).\
-                filter(Exam.author_id == user_id)
-            query.delete()
+            with self.db.begin_nested():
+                self.db.query(Group).\
+                    filter(Group.exam_id == exam.exam_id).\
+                    filter(Group.exam.has(Exam.author_id == user_id)).\
+                    delete()
+            
+            with self.db.begin_nested():
+                self.db.query(Exam).\
+                    filter(Exam.exam_id == exam.exam_id).\
+                    filter(Exam.author_id == user_id).\
+                    delete()
+            
             self.db.commit()
             return
-        except DatabaseError as error:
+        except (DatabaseError, NoResultFound) as error:
             raise error
 
     def generate(self, exam_generate:ExamGenerate):
