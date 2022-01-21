@@ -13,8 +13,6 @@ from src.db.schemas.group import Group
 from src.models.exam import *
 from src.models.group import GroupCreate
 
-from src.db.managers.group_manager import GroupManager
-from src.db.managers.task_aff_manager import TaskAffiliationManager
 from src.models.task_aff import TaskAffiliationCreate
 
 class ExamManager:
