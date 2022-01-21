@@ -32,11 +32,10 @@ class TagManager:
         except DatabaseError as error:
             raise error
 
-    def delete(self, tag_id: int):
+    def delete(self, tag: TagBase):
         try:
             self.db.query(Tag).\
-                filter(Tag.tag_id == tag_id).\
-                filter(~Tag.tag_affs.any()).\
+                filter(Tag.tag_id == tag.tag_id).\
                 delete()
             self.db.commit()
             return

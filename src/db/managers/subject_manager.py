@@ -7,6 +7,7 @@ from sqlalchemy.exc import DatabaseError
 from src.dependencies import get_db
 from src.db.schemas.subject import Subject
 from src.models.answer import *
+from src.models.subject import SubjectBase
 
 class SubjectManager:
     def __init__ (self, db: Session = Depends(get_db)):
@@ -32,11 +33,10 @@ class SubjectManager:
         except DatabaseError as error:
             raise error
     
-    def delete(self, subject_code: str):
+    def delete(self, subject: SubjectBase):
         try:
             self.db.query(Subject).\
-                filter(Subject.subject_code == subject_code).\
-                filter(~Subject.tasks.any()).\
+                filter(Subject.subject_code == subject.subject_code).\
                 delete()
             self.db.commit()
             return
