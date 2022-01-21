@@ -43,7 +43,7 @@ def all(
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/groups/{exam_id}", response_model=ExamWithGroups)
+@router.get("/{exam_id}/groups/", response_model=ExamWithGroups)
 def groups(
     exam_id: int,
     exam_manager: ExamManager = Depends(ExamManager),
