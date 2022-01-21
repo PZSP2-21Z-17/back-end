@@ -32,12 +32,14 @@ class TaskCreate(BaseModel):
 class TaskCreateWithAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
 
-class TaskWithAnswersTagsSubject(TaskModel):
+class TaskWithAnswersTagsSubjectUsage(TaskModel):
     answers: List[AnswerModel]
     tags: List[TagModel]
     subject: SubjectModel
+    in_use: bool
 
 class SearchTip(BaseModel):
     type: str
     id: str
     name: str
+

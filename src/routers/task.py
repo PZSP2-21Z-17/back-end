@@ -125,7 +125,7 @@ def create_with_answers(
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/find", response_model=List[TaskWithAnswersTagsSubject])
+@router.get("/find", response_model=List[TaskWithAnswersTagsSubjectUsage])
 def find(
     tags: List[int] = Query([]),
     search_string: str = Query(None),
