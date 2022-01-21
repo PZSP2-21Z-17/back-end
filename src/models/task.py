@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
+from uuid import UUID
 from pydantic import BaseModel
 
 from src.models.subject import SubjectModel
@@ -8,7 +9,7 @@ from src.models.tag import TagModel
 from .answer import AnswerCreateInTask, AnswerModel
 
 class TaskBase(BaseModel):
-    task_id: int
+    task_id: UUID
 
     class Config:
         orm_mode = True
@@ -27,7 +28,7 @@ class TaskCreate(BaseModel):
     date_creation: datetime
     is_visible: str
     subject_code: str
-    author_id: str
+    author_id: UUID
 
 class TaskCreateWithAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
