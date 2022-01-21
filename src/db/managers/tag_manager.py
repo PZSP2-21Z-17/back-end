@@ -31,16 +31,17 @@ class TagManager:
             return query.all()
         except DatabaseError as error:
             raise error
-
+    
     def delete(self, tag: TagBase):
         try:
-            self.db.query(Tag).\
-                filter(Tag.tag_id == tag.tag_id).\
-                delete()
-            self.db.commit()
-            return
+            query = self.db.query(Tag).filter(Tag.tag_id == tag.tag_id)
+            if query.filter(~Tag.tag_affs.any()).first() is not None:
+                query.delete()
+                self.db.commit()
+                return
+            else:
+                raise DatabaseError()
         except DatabaseError as error:
-            self.db.rollback()
             raise error
 
     def find(self, search_string: str, offset: int, limit: int = 25) -> List[Tag]:

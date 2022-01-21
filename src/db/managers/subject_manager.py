@@ -35,13 +35,14 @@ class SubjectManager:
     
     def delete(self, subject: SubjectBase):
         try:
-            self.db.query(Subject).\
-                filter(Subject.subject_code == subject.subject_code).\
-                delete()
-            self.db.commit()
-            return
+            query = self.db.query(Subject).filter(Subject.subject_code == subject.subject_code)
+            if query.filter(~Subject.tasks.any()).first() is not None:
+                query.delete()
+                self.db.commit()
+                return
+            else:
+                raise DatabaseError()
         except DatabaseError as error:
-            self.db.rollback()
             raise error
 
     def find(self, search_string: str, offset: int, limit: int = 25) -> List[Subject]:
