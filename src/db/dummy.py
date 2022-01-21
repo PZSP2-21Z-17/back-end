@@ -53,11 +53,13 @@ def fill():
         ['PLHD', 'Placeholder'],
         ['MATH', 'Mathematic'],
         ['LIT', 'Literature'],
+        ['AUTO', 'Automation'],
         ['HIS', 'History'],
         ['REL', 'Religion'],
         ['IT', 'Information Technology'],
         ['GEO', 'Geography'],
-        ['PHYS', 'Physics']
+        ['PHYS', 'Physics'],
+        ['CN', 'Computer Networks']
     ]
     for d in subject_data:
         db_subject = Subject(**dict(zip(subject_fields, d)))
@@ -364,8 +366,10 @@ def fill():
         'yes/no answers',
         'unusual question',
         'typical question',
+        'funny question',
         'teachers favorite',
-        'placeholder tag'
+        'placeholder tag',
+        'unused tag',
     ]
     for d in tag_data:
         db_tag = Tag(**dict(zip(tag_fields, [d])))
@@ -378,45 +382,45 @@ def fill():
     tag_aff_data = [
         [1, 6],
         [1, 6],
-        [2, 6, 7],
+        [2, 6, 8],
         [3, 6],
         [3, 5],
         [1, 6],
         [1, 5],
-        [2, 6, 7],
+        [2, 6, 8],
         [1, 5],
         [3, 5],
         [2, 6],
         [1, 5],
         [1, 6],
-	    [2, 4, 5, 7],
+	    [2, 4, 5, 8],
         [1, 6],
         [1, 6],
-        [2, 5, 7],
+        [2, 5, 8],
         [2, 5],
         [3, 5],
-        [3, 5, 7],
+        [3, 5, 8],
         [2, 4, 5],
         [1, 4, 5],
         [2, 6],
         [3, 4, 5],
-        [2, 5, 7],
+        [2, 5, 8],
         [1, 6],
-        [3, 4, 7],
+        [3, 4, 8],
         [3, 5],
         [1, 4, 6],
         [1, 6],
         [1, 5],
-        [1, 6, 7],
+        [1, 6, 8],
         [1, 4, 6],
         [1, 6],
-        [1, 5, 7],
+        [1, 5, 8],
         [2, 6],
         [1, 6],
         [3, 5],
     ]
     for _ in range(task_count - len(tag_aff_data)):
-        tag_aff_data.append([8])
+        tag_aff_data.append([9])
 
     for (task_id, tag_ids) in zip(range(1, len(tag_aff_data) + 1), tag_aff_data):
         for tag_id in tag_ids:
