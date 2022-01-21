@@ -51,9 +51,10 @@ class ExamManager:
     def generate(self, exam_generate:ExamGenerate):
         try:
             # Tworzenie egzaminu
+            exam_create = ExamCreate(**exam_generate.dict())
+            created_exam = Exam(**exam_create.dict())
             with self.db.begin_nested():
-                exam_create = ExamCreate(**exam_generate.dict())
-                created_exam = self.db.add(Exam(**exam_create.dict()))
+                self.db.add(created_exam)
 
             # Tworzenie grup
             with self.db.begin_nested():

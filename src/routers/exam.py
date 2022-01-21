@@ -70,6 +70,7 @@ def generate(
         raise HTTPUnauthorized()
 
     exam_generate.author_id = user_id
+    exam_generate.date_of_exam = datetime.utcnow()
     try:
         if exam_generate.tasks_per_exam > len(exam_generate.task_ids):
             raise HTTPBadRequest()

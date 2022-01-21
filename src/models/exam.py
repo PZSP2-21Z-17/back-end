@@ -1,6 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 
 class ExamBase(BaseModel):
     exam_id: int
@@ -12,15 +13,13 @@ class ExamModel(ExamBase):
     date_of_exam: datetime
     content: str
     description: str
-    author_id: str
-    description: str
+    author_id: UUID
 
 class ExamCreate(BaseModel):
-    date_of_exam: datetime
+    date_of_exam: Optional[datetime]
     content: str
     description: str
-    author_id: str
-    description: str
+    author_id: Optional[UUID]
 
 class ExamGenerate(ExamCreate):
     tasks_per_exam: int
