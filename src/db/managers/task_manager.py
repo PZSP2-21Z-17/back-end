@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import Depends
 from sqlalchemy import func, select, literal_column, String, literal
 from sqlalchemy.sql import label, case, any_, desc, cast, or_
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
 
@@ -90,10 +91,10 @@ class TaskManager:
             for db_answer in db_answers:
                 db_task.answers.append(db_answer)
             for db_tag in db_tags:
-                db_task.tags.append(db_tag)
+                db_task.tags.append(self.db.query(Tag).filter(Tag.tag_id == db_tag.tag_id)).one()
             self.db.commit()
             self.db.refresh(db_task)
-        except DatabaseError as error:
+        except (DatabaseError, NoResultFound) as error:
             self.db.rollback()
             raise error
         return db_task
