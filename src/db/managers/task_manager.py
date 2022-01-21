@@ -91,14 +91,8 @@ class TaskManager:
     
     def find(self, user_id: str, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
         try:
-            query = self.db.query(
-                Task.subject_code,
-                Task.task_id,
-                Task.content,
-                Task.date_creation,
-                Task.is_visible,
-                Task.task_affs.any().label('in_use')
-            ).filter((Task.is_visible == 'Y') | (Task.author_id == user_id))
+            query = self.db.query(Task, Task.task_affs.any().label('in_use')).\
+                filter((Task.is_visible == 'Y') | (Task.author_id == user_id))
             if len(tags) > 0:
                 query = query.\
                     join(Task.tag_affs).\

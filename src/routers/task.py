@@ -138,8 +138,7 @@ def find(
     if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
-        res = task_manager.find(user_id, tags, search_string, subject_code, offset)
-        return res
+        return task_manager.find(user_id, tags, search_string, subject_code, offset)
     except ManagerError:
         raise HTTPUnauthorized()
 

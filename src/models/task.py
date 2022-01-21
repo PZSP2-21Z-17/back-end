@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 from src.models.subject import SubjectModel
@@ -32,10 +32,13 @@ class TaskCreate(BaseModel):
 class TaskCreateWithAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
 
-class TaskWithAnswersTagsSubjectUsage(TaskModel):
+class TaskWithAnswersTagsSubject(TaskModel):
     answers: List[AnswerModel]
     tags: List[TagModel]
     subject: SubjectModel
+
+class TaskWithAnswersTagsSubjectUsage(BaseModel):
+    Task: TaskWithAnswersTagsSubject
     in_use: bool
 
 class SearchTip(BaseModel):
