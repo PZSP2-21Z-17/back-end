@@ -9,7 +9,7 @@ from src.models.tag import TagModel
 from .answer import AnswerCreateInTask, AnswerModel
 
 class TaskBase(BaseModel):
-    task_id: UUID
+    task_id: int
 
     class Config:
         orm_mode = True
