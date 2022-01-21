@@ -91,7 +91,7 @@ class TaskManager:
             for db_answer in db_answers:
                 db_task.answers.append(db_answer)
             for db_tag in db_tags:
-                db_task.tags.append(self.db.query(Tag).filter(Tag.tag_id == db_tag.tag_id)).one()
+                db_task.tags.append(self.db.query(Tag).filter(Tag.tag_id == db_tag.tag_id).one())
             self.db.commit()
             self.db.refresh(db_task)
         except (DatabaseError, NoResultFound) as error:
