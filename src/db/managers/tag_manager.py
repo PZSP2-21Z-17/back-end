@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import Depends
 from sqlalchemy import func, desc
 from sqlalchemy.orm import Session
@@ -46,8 +46,12 @@ class TagManager:
 
     def find(self, search_string: str, offset: int, limit: int = 25) -> List[Tag]:
         try:
-            query =  self.db.query(Tag).\
-                order_by(desc(func.similarity(Tag.name, search_string))).\
+            query =  self.db.query(Tag)
+            if search_string != '':
+                query = query.order_by(desc(func.similarity(Tag.name, search_string)))
+            else:
+                query = query.order_by(Tag.name)
+            query = query.\
                 limit(limit).\
                 offset(offset * limit)
             return query.all()
