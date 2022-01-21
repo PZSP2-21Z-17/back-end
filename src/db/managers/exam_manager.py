@@ -50,9 +50,13 @@ class ExamManager:
     def delete(self, user_id: UUID, exam: ExamBase):
         try:
             with self.db.begin_nested():
+                self.db.query(TaskAffiliation).\
+                    filter(TaskAffiliation.exam_id == exam.exam_id).\
+                    delete()
+
+            with self.db.begin_nested():
                 self.db.query(Group).\
                     filter(Group.exam_id == exam.exam_id).\
-                    filter(Group.exam.has(Exam.author_id == user_id)).\
                     delete()
             
             with self.db.begin_nested():
@@ -64,6 +68,7 @@ class ExamManager:
             self.db.commit()
             return
         except (DatabaseError, NoResultFound) as error:
+            self.db.rollback()
             raise error
 
     def generate(self, exam_generate:ExamGenerate):
