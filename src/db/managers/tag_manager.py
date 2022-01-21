@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import Depends
+from sqlalchemy import literal_column
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
 
@@ -21,9 +22,12 @@ class TagManager:
             raise error
         return tag
 
-    def all(self) -> List[Tag]:
+    def all(self, offset: int, limit: int = 25):
         try:
-            tags = self.db.query(Tag).all()
+            query = self.db.query(Tag.name, Tag.tag_id, Tag.tag_affs.any().label('in_use')).\
+                limit(limit).\
+                offset(offset*limit)
+            return query.all()
         except DatabaseError as error:
             raise error
         return tags
@@ -38,7 +42,10 @@ class TagManager:
 
     def delete(self, tag: TagBase):
         try:
-            self.db.query(Tag).filter(Tag.tag_id == tag.tag_id).delete()
+            self.db.query(Tag).\
+                filter(Tag.tag_id == tag.tag_id).\
+                filter(~Tag.tag_affs.any()).\
+                delete()
             self.db.commit()
         except DatabaseError as error:
             self.db.rollback()

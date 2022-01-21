@@ -11,3 +11,6 @@ class TagModel(TagBase):
 
 class TagCreate(BaseModel):
     name: str
+
+class TagModelWithUsage(TagModel):
+    in_use: bool

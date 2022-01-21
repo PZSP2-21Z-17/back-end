@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from src.db.managers.tag_manager import TagManager
 from src.db.managers.exceptions import ManagerError
@@ -7,7 +7,7 @@ from src.db.managers.exceptions import ManagerError
 from src.dependencies import get_db
 from src.db.schemas.tag import Tag
 from src.models.tag import *
-from src.routers.exceptions import HTTPUnauthorized
+from src.routers.exceptions import HTTPForbidden, HTTPUnauthorized
 
 router = APIRouter()
 
@@ -18,10 +18,10 @@ def create(tag: TagCreate, tag_manager: TagManager = Depends(TagManager)):
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/all/", response_model=List[TagModel])
-def all( tag_manager: TagManager = Depends(TagManager)):
+@router.get("/all/", response_model=List[TagModelWithUsage])
+def all(offset: int = Query(0), tag_manager: TagManager = Depends(TagManager)):
     try:
-        a = tag_manager.all()
+        a = tag_manager.all(offset)
         return a
     except ManagerError:
         raise HTTPUnauthorized()
@@ -38,7 +38,7 @@ def delete(tag: TagBase,  tag_manager: TagManager = Depends(TagManager)):
     try:
         return tag_manager.delete(tag)
     except ManagerError:
-        raise HTTPUnauthorized()
+        raise HTTPForbidden()
 
 @router.post("/update/", response_model=TagModel)
 def update(tag: TagModel, tag_manager: TagManager = Depends(TagManager)):
