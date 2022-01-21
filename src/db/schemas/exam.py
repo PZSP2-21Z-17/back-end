@@ -18,4 +18,4 @@ class Exam(BaseSchema):
     user            = relationship("User", back_populates='exams')
 
     # Children
-    groups          = relationship("Group", back_populates='exam')
+    groups          = relationship("Group", back_populates='exam', calscade='all, delete')
