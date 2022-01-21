@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+from fastapi import APIRouter, Cookie, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.db.managers.group_manager import GroupManager
 from src.db.managers.exceptions import ManagerError
+from src.db.managers.user_manager import UserManager
 
 from src.dependencies import get_db
 from src.db.schemas.group import Group
@@ -25,10 +27,18 @@ def all(group_manager: GroupManager = Depends(GroupManager)):
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/one/{exam_id}/{group_nr}", response_model=GroupModel)
-def one(exam_id: int, group_nr: int, group_manager: GroupManager = Depends(GroupManager)):
+@router.get("/{exam_id}/{group_nr}", response_model=GroupWithAnswers)
+def one(
+    exam_id: int,
+    group_nr: int,
+    group_manager: GroupManager = Depends(GroupManager),
+    user_id: Optional[str] = Cookie(None),
+    user_manager: UserManager = Depends(UserManager)
+):
+    if not user_manager.is_user(user_id):
+        raise HTTPUnauthorized()
     try:
-        a = group_manager.getOne(exam_id, group_nr)
+        a = group_manager.one(user_id, exam_id, group_nr)
         return a
     except ManagerError:
         raise HTTPUnauthorized()

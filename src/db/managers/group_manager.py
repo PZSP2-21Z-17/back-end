@@ -2,6 +2,7 @@ from typing import List
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
+from src.db.schemas.exam import Exam
 
 from src.dependencies import get_db
 from src.db.schemas.group import Group
@@ -28,12 +29,15 @@ class GroupManager:
             raise error
         return groups
 
-    def getOne(self, exam_id: int, group_nr:int):
+    def one(self, user_id: int, exam_id: int, group_nr:int):
         try:
-            groups = self.db.query(Group).filter(Group.exam_id == exam_id).filter(Group.group_nr == group_nr).one()
+            query = self.db.query(Group).\
+                filter(Group.exam_id == exam_id).\
+                filter(Group.group_nr == group_nr).\
+                filter(Group.exam.has(Exam.author_id == user_id))
+            return query.one()
         except DatabaseError as error:
             raise error
-        return groups
 
     def getAnswers(self,  exam_id: int, group_nr:int):
         try:

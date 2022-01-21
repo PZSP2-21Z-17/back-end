@@ -12,7 +12,7 @@ class Group(BaseSchema):
 
     # Parents
     exam_id         = Column(Integer, ForeignKey('exam.exam_id'), primary_key=True, nullable=False)
-    exams           = relationship("Exam", back_populates='groups')
+    exam            = relationship("Exam", back_populates='groups')
 
     # Children
     task_affs       = relationship("TaskAffiliation",  primaryjoin="and_(Group.group_nr == TaskAffiliation.group_nr, Group.exam_id == TaskAffiliation.exam_id)", back_populates='groups')
