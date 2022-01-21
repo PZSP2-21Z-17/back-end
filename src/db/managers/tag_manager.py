@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import Depends
-from sqlalchemy import literal_column
+from sqlalchemy import func, desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
 
@@ -22,46 +22,34 @@ class TagManager:
             raise error
         return tag
 
-    def all(self, offset: int, limit: int = 25):
+    def all(self, offset: int = 0, limit: int = 25):
         try:
             query = self.db.query(Tag.name, Tag.tag_id, Tag.tag_affs.any().label('in_use')).\
+                order_by(Tag.name).\
                 limit(limit).\
                 offset(offset*limit)
             return query.all()
         except DatabaseError as error:
             raise error
-        return tags
 
-    def byCode(self, tag_code: int):
-        try:
-            tag = self.db.query(Tag).filter(Tag.tag_id == tag_code).one()
-        except DatabaseError as error:
-            raise error
-        return tag
-
-
-    def delete(self, tag: TagBase):
+    def delete(self, tag_id: int):
         try:
             self.db.query(Tag).\
-                filter(Tag.tag_id == tag.tag_id).\
+                filter(Tag.tag_id == tag_id).\
                 filter(~Tag.tag_affs.any()).\
                 delete()
             self.db.commit()
+            return
         except DatabaseError as error:
             self.db.rollback()
             raise error
-        return 
 
-
-    def update(self, tag: TagModel):
+    def find(self, search_string: str, offset: int, limit: int = 25) -> List[Tag]:
         try:
-            self.db.query(Tag).\
-                filter(Tag.tag_id == tag.tag_id).\
-                filter(~Tag.tag_affs.any()).\
-                update(tag.dict())
-            self.db.commit()
-            db_tag = self.db.query(Tag).filter(Tag.tag_id == tag.tag_id).one()        
+            query =  self.db.query(Tag).\
+                order_by(desc(func.similarity(Tag.name, search_string))).\
+                limit(limit).\
+                offset(offset * limit)
+            return query.all()
         except DatabaseError as error:
             raise error
-        return db_tag
-

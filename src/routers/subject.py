@@ -1,14 +1,11 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, Query
 from src.db.managers.subject_manager import SubjectManager
 from src.db.managers.exceptions import ManagerError
 
-from src.dependencies import get_db
 from src.db.schemas.subject import Subject
 from src.models.subject import *
-from src.routers.exceptions import HTTPUnauthorized
-
+from src.routers.exceptions import HTTPForbidden, HTTPUnauthorized
 
 router = APIRouter()
 
@@ -19,20 +16,19 @@ def create(subject: SubjectCreate, subject_manager: SubjectManager = Depends(Sub
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/all/", response_model=List[SubjectModel])
-def all(subject_manager: SubjectManager = Depends(SubjectManager)):
+@router.get("/all/", response_model=List[SubjectModelWithUsage])
+def all(offset: int = Query(0), subject_manager: SubjectManager = Depends(SubjectManager)):
     try:
-        a = subject_manager.all()
-        return a
+        return subject_manager.all(offset)
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/one/{subject_code}", response_model=SubjectModel)
-def one(subject_code: str, subject_manager: SubjectManager = Depends(SubjectManager)):
+@router.post("/delete/")
+def delete(subject: SubjectBase, subject_manager: SubjectManager = Depends(SubjectManager)):
     try:
-        return subject_manager.byCode(subject_code)
+        return subject_manager.delete(subject)
     except ManagerError:
-        raise HTTPUnauthorized()
+        raise HTTPForbidden()
 
 @router.get("/find/", response_model=List[SubjectModel])
 def find(search_string: str, offset: int = 0, subject_manager: SubjectManager = Depends(SubjectManager)):

@@ -12,3 +12,6 @@ class SubjectModel(SubjectBase):
 class SubjectCreate(BaseModel):
     subject_code: str
     name: str
+
+class SubjectModelWithUsage(SubjectModel):
+    in_use: bool
