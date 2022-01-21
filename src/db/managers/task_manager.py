@@ -42,14 +42,19 @@ class TaskManager:
             raise error
         return answer
 
-    def delete(self, user_id: str, task:TaskBase):
+    def delete(self, user_id: str, task: TaskBase):
         try:
-            self.db.query(Task).filter(Task.task_id == task.task_id).filter(Task.author_id == user_id).delete()
-            self.db.commit()
+            query = self.db.query(Task).\
+                filter(Task.task_id == task.task_id).\
+                filter(Task.author_id == user_id)
+            if query.filter(~Task.task_affs.any()).first() is not None:
+                query.delete()
+                self.db.commit()
+                return
+            else:
+                raise DatabaseError()
         except DatabaseError as error:
-            self.db.rollback()
             raise error
-        return
 
     def update(self, user_id: str, task:TaskModel):
         try:
