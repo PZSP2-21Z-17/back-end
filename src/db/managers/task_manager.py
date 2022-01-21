@@ -13,7 +13,7 @@ from src.db.schemas.tag_aff import TagAffiliation
 from src.db.schemas.tag import Tag
 from src.db.schemas.subject import Subject
 
-from src.models.task import TaskBase, TaskModel, TaskCreateWithAnswers, TaskCreate
+from src.models.task import TaskBase, TaskCreateWithTagsAnswers, TaskModel, TaskCreate
 
 class TaskManager:
     def __init__ (self, db: Session = Depends(get_db)):
@@ -80,14 +80,17 @@ class TaskManager:
             raise error
         return tasks
 
-    def create_with_answers(self, task_with_answers: TaskCreateWithAnswers):
+    def create_with_tags_answers(self, task_with_answers: TaskCreateWithTagsAnswers):
         task = TaskCreate(**task_with_answers.dict())
         db_task = Task(**task.dict())
         db_answers = [Answer(**answer.dict()) for answer in task_with_answers.answers]
+        db_tags = [Tag(**tag.dict()) for tag in task_with_answers.tags]
         try:
             self.db.add(db_task)
             for db_answer in db_answers:
                 db_task.answers.append(db_answer)
+            for db_tag in db_tags:
+                db_task.tags.append(db_tag)
             self.db.commit()
             self.db.refresh(db_task)
         except DatabaseError as error:

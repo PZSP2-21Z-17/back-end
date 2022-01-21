@@ -4,7 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from src.models.subject import SubjectModel
-from src.models.tag import TagModel
+from src.models.tag import TagBase, TagModel
 
 from .answer import AnswerCreateInTask, AnswerModel
 
@@ -28,10 +28,11 @@ class TaskCreate(BaseModel):
     date_creation: datetime
     is_visible: str
     subject_code: str
-    author_id: UUID
+    author_id: Optional[UUID]
 
-class TaskCreateWithAnswers(TaskCreate):
+class TaskCreateWithTagsAnswers(TaskCreate):
     answers: List[AnswerCreateInTask]
+    tags: List[TagBase]
 
 class TaskWithAnswersTagsSubject(TaskModel):
     answers: List[AnswerModel]
@@ -46,4 +47,3 @@ class SearchTip(BaseModel):
     type: str
     id: str
     name: str
-

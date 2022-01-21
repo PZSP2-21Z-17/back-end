@@ -109,9 +109,9 @@ def all_with_answers(
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.post("/create_with_answers/", response_model=TaskWithAnswers)
+@router.post("/create_with_answers/", response_model=TaskWithAnswersTagsSubject)
 def create_with_answers(
-    task_with_answers: TaskCreateWithAnswers,
+    task_with_answers: TaskCreateWithTagsAnswers,
     task_manager: TaskManager = Depends(TaskManager),
     user_id: Optional[str] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
@@ -121,7 +121,7 @@ def create_with_answers(
 
     task_with_answers.author_id = user_id
     try:
-        return task_manager.create_with_answers(task_with_answers)
+        return task_manager.create_with_tags_answers(task_with_answers)
     except ManagerError:
         raise HTTPUnauthorized()
 
