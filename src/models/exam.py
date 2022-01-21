@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 from uuid import UUID
 
+from src.models.group import GroupBase
+
 class ExamBase(BaseModel):
     exam_id: int
 
@@ -25,3 +27,6 @@ class ExamGenerate(ExamCreate):
     tasks_per_exam: int
     group_count: int
     task_ids: List[int]
+
+class ExamWithGroups(ExamModel):
+    groups: List[GroupBase]

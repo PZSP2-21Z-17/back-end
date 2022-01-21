@@ -36,7 +36,7 @@ class ExamManager:
             raise error
         return exam
 
-    def byId(self, user_id: UUID, exam_id: int):
+    def groups(self, user_id: UUID, exam_id: int):
         try:
             exam = self.db.query(Exam).\
                 filter(Exam.exam_id == exam_id).\
