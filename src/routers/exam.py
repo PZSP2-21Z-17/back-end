@@ -28,7 +28,7 @@ def create(
     except ManagerError:
         raise HTTPUnauthorized()
 
-@router.get("/all/", response_model=List[ExamModel])
+@router.get("/all/", response_model=List[ExamWithGroups])
 def all(
     exam_manager: ExamManager = Depends(ExamManager),
     user_id: Optional[str] = Cookie(None),
