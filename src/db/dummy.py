@@ -106,17 +106,17 @@ def fill():
         ["What equation is *Albert Einstein* known for?", 'PHYS', uuids[1]],
         ["What's the equation of position over time?", 'PHYS', uuids[1]],
         ["Find the area of the red triangle. ![image](https://d138zd1ktt9iqe.cloudfront.net/media/seo_landing_files/red-triangle-1606299717.png)", 'MATH', uuids[2]],
-	    ["Is that Joseph Pilsudski? https://upload.wikimedia.org/wikipedia/commons/3/3b/Jozef_Pilsudski1.jpg",'HIS', uuids[3]],
+	    ["Is that Joseph Pilsudski?\n<img src='https://upload.wikimedia.org/wikipedia/commons/3/3b/Jozef_Pilsudski1.jpg' alt='drawing' width='200'/>\n",'HIS', uuids[3]],
         ["What's radius of circle with circumference 2*pi?", 'MATH', uuids[1]],
         ["Add 8.563 and 4.8292.", 'MATH', uuids[1]],
         ["I am an odd number. Take away one letter and I become even. What number am I?", 'MATH', uuids[1]],
-        ["Sally is 54 years old and her mother is 80, how many years ago was Sally’s mother times her age??", 'MATH', uuids[1]],
+        ["Sally is 54 years old and her mother is 80, how many years ago was Sally's mother times her age??", 'MATH', uuids[1]],
         ["A ship anchored in a port has a ladder which hangs over the side. The length of the ladder is 200cm, the distance between each rung in 20cm and the bottom rung touches the water. The tide rises at a rate of 10cm an hour. When will the water reach the fifth rung?", 'MATH', uuids[1]],
         ["The day before yesterday I was 25. The next year I will be 28. This is true only one day in a year. What day is my Birthday? ", 'MATH', uuids[1]],
         ["Using only an addition, can you get the number 1000 with five numbers made only out of digit 8 (8, 88, 888 etc.)?", 'MATH', uuids[1]],
         ["A man is climbing up a mountain which is inclined. He has to travel 100 km to reach the top of the mountain. Every day He climbs up 2 km forward in the day time. Exhausted, he then takes rest there at night time. At night, while he is asleep, he slips down 1 km backwards because the mountain is inclined. Cat He reach peak in less than 100 days?", 'MATH', uuids[1]],
         ["Look at this series: 53, 53, 40, 40, 27, 27, … What number should come next", 'MATH', uuids[1]],
-        ["Can you get a number 100 by using three sevens (7’s) and a one (1)?", 'MATH', uuids[1]],
+        ["Can you get a number 100 by using three sevens (7's) and a one (1)?", 'MATH', uuids[1]],
         ["What is the name of the capital of Sri Lanka?", 'GEO', uuids[3]],
         ["How many states are in USA", 'GEO', uuids[3]],
         ["Is Taiwan a country?", 'GEO', uuids[3]],
@@ -126,9 +126,12 @@ def fill():
         ["What is Obama's last name?", 'HIS', uuids[3]],
         ["Current Prime Minister of the UK.", 'HIS', uuids[3]],
         ["Is Chile in South America", 'GEO', uuids[3]],
-        ["What is the product of this code: \n'''py\na = 7 - 2\nprint(a)\n'''", 'IT', uuids[1]]
+        ["What is the product of this code: \n```py\na = 7 - 2\nprint(a)\n```", 'IT', uuids[1]],
+        ["What started the great Chicago fire of 1871?",'HIS', uuids[3]],
+        ["The United States bought Alaska from which country?",'HIS', uuids[3]],
+        ["Which of the presidents is not on Mount Rushmore?",'HIS', uuids[3]],
+        ["What is the best-selling novel of all time?",'HIS', uuids[3]]
     ]
-    task_count_nph = len(task_data)
     for _ in range(PLACEHOLDERS):
         task_data.append(["Placeholder.", 'PLHD', uuids[0]])
     task_count = len(task_data)
@@ -322,6 +325,25 @@ def fill():
             ("7", "N"),
             ("5", "Y"),
             ("2", "N")
+        ],
+        [
+            ("A cow kicking over a lantern", 'N'),
+            ("It remains uncertain", 'Y'),
+        ],
+        [
+            ("Canada", 'N'),
+            ("Russia", 'Y'),
+            ("China", 'N'),
+        ],
+        [
+            ("Donald Trump", 'Y'),
+            ("George Washington", 'N'),
+            ("Abraham Lincoln", 'N'),
+        ],
+        [
+            ("Don Quixote", 'Y'),
+            ("Harry Potter", 'N'),
+            ("Alchemist", 'N'),
         ]
     ]
     for i in range(task_count - len(answer_data)):
@@ -387,9 +409,13 @@ def fill():
         [1, 5],
         [1, 6, 7],
         [1, 4, 6],
-        [1, 6]
+        [1, 6],
+        [1, 5, 7],
+        [2, 6],
+        [1, 6],
+        [3, 5],
     ]
-    for i in range(task_count - len(tag_aff_data)):
+    for _ in range(task_count - len(tag_aff_data)):
         tag_aff_data.append([8])
 
     for (task_id, tag_ids) in zip(range(1, len(tag_aff_data) + 1), tag_aff_data):
