@@ -55,7 +55,10 @@ class TagManager:
 
     def update(self, tag: TagModel):
         try:
-            self.db.query(Tag).filter(Tag.tag_id == tag.tag_id).update(tag.dict())
+            self.db.query(Tag).\
+                filter(Tag.tag_id == tag.tag_id).\
+                filter(~Tag.tag_affs.any()).\
+                update(tag.dict())
             self.db.commit()
             db_tag = self.db.query(Tag).filter(Tag.tag_id == tag.tag_id).one()        
         except DatabaseError as error:
