@@ -58,6 +58,19 @@ def one(
     except ManagerError:
         raise HTTPUnauthorized()
 
+@router.post("/delete/", response_model=None)
+def delete(
+    exam: ExamBase,
+    exam_manager: ExamManager = Depends(ExamManager),
+    user_id: Optional[str] = Cookie(None),
+    user_manager: UserManager = Depends(UserManager)
+):
+    if not user_manager.is_user(user_id):
+        raise HTTPUnauthorized()
+    try:
+        return exam_manager.delete(user_id, exam)
+    except ManagerError:
+        raise HTTPUnauthorized()
 
 @router.post("/generate/", response_model=ExamModel)
 def generate(

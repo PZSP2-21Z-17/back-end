@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import Depends
 from sqlalchemy import func, select, literal_column, String, literal
 from sqlalchemy.sql import label, case, any_, desc, cast, or_
@@ -28,21 +29,21 @@ class TaskManager:
             raise error
         return task
 
-    def all(self, user_id: str) -> List[Task]:
+    def all(self, user_id: UUID) -> List[Task]:
         try:
             tasks = self.db.query(Task).filter((Task.is_visible == 'Y') | (Task.author_id == user_id)).all()
         except DatabaseError as error:
             raise error
         return tasks
 
-    def byId(self, user_id: str, task_id: int):
+    def byId(self, user_id: UUID, task_id: int):
         try:
             answer = self.db.query(Task).filter((Task.is_visible == 'Y') | (Task.author_id == user_id)).filter(Task.task_id == task_id).one()
         except DatabaseError as error:
             raise error
         return answer
 
-    def delete(self, user_id: str, task: TaskBase):
+    def delete(self, user_id: UUID, task: TaskBase):
         try:
             query = self.db.query(Task).\
                 filter(Task.task_id == task.task_id).\
@@ -56,7 +57,7 @@ class TaskManager:
         except DatabaseError as error:
             raise error
 
-    def update(self, user_id: str, task:TaskModel):
+    def update(self, user_id: UUID, task:TaskModel):
         try:
             self.db.query(Task).filter(Task.task_id == task.task_id).filter(Task.author_id == user_id).update(task.dict())
             self.db.commit()
@@ -65,14 +66,14 @@ class TaskManager:
             raise error
         return db_task
 
-    def one_with_answers(self, user_id: str, task_id: int):
+    def one_with_answers(self, user_id: UUID, task_id: int):
         try:
             task = self.db.query(Task).filter(Task.task_id == task_id).filter((Task.is_visible == 'Y') | (Task.author_id == user_id)).one()
         except DatabaseError as error:
             raise error
         return task
 
-    def all_with_answers(self, user_id: str):
+    def all_with_answers(self, user_id: UUID):
         try:
             tasks = self.db.query(Task).filter((Task.is_visible == 'Y') | (Task.author_id == user_id)).all()
         except DatabaseError as error:
@@ -94,7 +95,7 @@ class TaskManager:
             raise error
         return db_task
     
-    def find(self, user_id: str, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
+    def find(self, user_id: UUID, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
         try:
             query = self.db.query(Task, Task.task_affs.any().label('in_use')).\
                 filter((Task.is_visible == 'Y') | (Task.author_id == user_id))

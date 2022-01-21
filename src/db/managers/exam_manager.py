@@ -29,14 +29,14 @@ class ExamManager:
             raise error
         return exam
 
-    def all(self, user_id: str) -> List[Exam]:
+    def all(self, user_id: UUID) -> List[Exam]:
         try:
             exam = self.db.query(Exam).filter(Exam.author_id == user_id).all()
         except DatabaseError as error:
             raise error
         return exam
 
-    def byId(self, user_id: str, exam_id: int):
+    def byId(self, user_id: UUID, exam_id: int):
         try:
             exam = self.db.query(Exam).\
                 filter(Exam.exam_id == exam_id).\
@@ -45,6 +45,17 @@ class ExamManager:
         except DatabaseError as error:
             raise error
         return exam
+
+    def delete(self, user_id: UUID, exam: ExamBase):
+        try:
+            query = self.db.query(Exam).\
+                filter(Exam.exam_id == exam.exam_id).\
+                filter(Exam.author_id == user_id)
+            query.delete()
+            self.db.commit()
+            return
+        except DatabaseError as error:
+            raise error
 
     def generate(self, exam_generate:ExamGenerate):
         try:

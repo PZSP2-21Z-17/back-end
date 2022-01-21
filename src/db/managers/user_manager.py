@@ -30,14 +30,14 @@ class UserManager:
             raise error
         return db_user
 
-    def lookup(self, user_id: str):
+    def lookup(self, user_id: UUID):
         try:
             db_user = self.db.query(User).filter(User.user_id == user_id).one()
         except (DatabaseError, NoResultFound) as error:
             raise error
         return db_user
 
-    def is_user(self, user_id: str) -> bool:
+    def is_user(self, user_id: UUID) -> bool:
         try:
             db_user = self.db.query(User).filter(User.user_id == user_id).one()
         except (DatabaseError, NoResultFound) as error:
