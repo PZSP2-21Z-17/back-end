@@ -50,6 +50,12 @@ class TaskManager:
                 filter(Task.task_id == task.task_id).\
                 filter(Task.author_id == user_id)
             query.filter(~Task.task_affs.any()).one()
+            self.db.query(Answer).\
+                filter(Answer.task_id == task.task_id).\
+                delete()
+            self.db.query(TagAffiliation).\
+                filter(TagAffiliation.task_id == task.task_id).\
+                delete()
             query.delete()
             self.db.commit()
         except DatabaseError as error:
@@ -98,7 +104,7 @@ class TaskManager:
     
     def find(self, user_id: UUID, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
         try:
-            query = self.db.query(Task, Task.task_affs.any().label('in_use')).\
+            query = self.db.query(Task, label('in_use', (Task.author_id != user_id) | (Task.task_affs.any()))).\
                 filter((Task.is_visible == 'Y') | (Task.author_id == user_id))
             if len(tags) > 0:
                 query = query.\
