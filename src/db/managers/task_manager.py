@@ -49,12 +49,9 @@ class TaskManager:
             query = self.db.query(Task).\
                 filter(Task.task_id == task.task_id).\
                 filter(Task.author_id == user_id)
-            if query.filter(~Task.task_affs.any()).first() is not None:
-                query.delete()
-                self.db.commit()
-                return
-            else:
-                raise DatabaseError()
+            query.filter(~Task.task_affs.any()).one()
+            query.delete()
+            self.db.commit()
         except DatabaseError as error:
             raise error
 
