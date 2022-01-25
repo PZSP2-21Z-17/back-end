@@ -108,7 +108,7 @@ def fill():
         ["What equation is *Albert Einstein* known for?", 'PHYS', uuids[1]],
         ["What's the equation of position over time?", 'PHYS', uuids[1]],
         ["Find the area of the red triangle. ![image](https://d138zd1ktt9iqe.cloudfront.net/media/seo_landing_files/red-triangle-1606299717.png)", 'MATH', uuids[2]],
-	    ["Is that Joseph Pilsudski?\n<img src='https://upload.wikimedia.org/wikipedia/commons/3/3b/Jozef_Pilsudski1.jpg' alt='drawing' width='200'/>\n",'HIS', uuids[3]],
+	    ["Is that Joseph Pilsudski? <br><img src='https://upload.wikimedia.org/wikipedia/commons/3/3b/Jozef_Pilsudski1.jpg' alt='drawing' width='200'/>",'HIS', uuids[3]],
         ["What's radius of circle with circumference 2*pi?", 'MATH', uuids[1]],
         ["Add 8.563 and 4.8292.", 'MATH', uuids[1]],
         ["I am an odd number. Take away one letter and I become even. What number am I?", 'MATH', uuids[1]],
