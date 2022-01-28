@@ -1,3 +1,5 @@
+Python 3.9+ with pip package manager is required to run the project.
+
 Make sure you have a PowerShell of version 6 or higher.
 
 How to setup environment:
