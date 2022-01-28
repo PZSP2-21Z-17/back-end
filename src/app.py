@@ -22,7 +22,7 @@ app.include_router(user.router, prefix="/user")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "http://34.118.106.233:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
