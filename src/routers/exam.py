@@ -1,16 +1,16 @@
+from datetime import datetime
+from fastapi import APIRouter, Cookie, Depends
 from typing import List, Optional
-from fastapi import APIRouter, Cookie, Depends, HTTPException
-from sqlalchemy.orm import Session
+
 from src.db.managers.exam_manager import ExamManager
 from src.db.managers.exceptions import ManagerError
 from src.db.managers.user_manager import UserManager
-
-from src.dependencies import get_db
 from src.db.schemas.exam import Exam
-from src.models.exam import *
+from src.models.exam import ExamBase, ExamCreate, ExamGenerate, ExamModel, ExamWithGroups
 from src.routers.exceptions import HTTPUnauthorized, HTTPBadRequest
 
 router = APIRouter()
+
 
 @router.post("/create/", response_model=ExamModel)
 def create(
@@ -21,12 +21,13 @@ def create(
 ):
     if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
-    
+
     exam.author_id = user_id
     try:
         return exam_manager.add(Exam(**exam.dict()))
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/all/", response_model=List[ExamWithGroups])
 def all(
@@ -36,12 +37,13 @@ def all(
 ):
     if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
-    
+
     try:
         a = exam_manager.all(user_id)
         return a
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/{exam_id}/groups/", response_model=ExamWithGroups)
 def groups(
@@ -52,11 +54,12 @@ def groups(
 ):
     if not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
-    
+
     try:
         return exam_manager.groups(user_id, exam_id)
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.post("/delete/", response_model=None)
 def delete(
@@ -71,6 +74,7 @@ def delete(
         return exam_manager.delete(user_id, exam)
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.post("/generate/", response_model=ExamModel)
 def generate(

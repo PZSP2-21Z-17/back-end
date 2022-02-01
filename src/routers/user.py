@@ -1,25 +1,24 @@
 from typing import Optional
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, Request
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Cookie, Depends, Response
+
 from src.db.managers.user_manager import UserManager
 from src.db.managers.exceptions import ManagerError
-
-from src.dependencies import get_db
-from src.db.schemas.user import User
-from src.models.user import *
+from src.models.user import UserCreate, UserLogin, UserLookup
 from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
 
 COOKIE_USER_ID = 'user_id'
-CLIENT_SESSION = 10 *60 *60
+CLIENT_SESSION = 10 * 60 * 60
+
 
 @router.post("/register/", response_model=UserLookup)
-def register(user: UserCreate, user_manager:UserManager = Depends(UserManager)):
+def register(user: UserCreate, user_manager: UserManager = Depends(UserManager)):
     try:
         return user_manager.register(user)
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.post("/login/")
 def login(user: UserLogin, response: Response, user_manager: UserManager = Depends(UserManager)):
@@ -30,10 +29,12 @@ def login(user: UserLogin, response: Response, user_manager: UserManager = Depen
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.post("/logout/")
 def logout(response: Response):
     response.set_cookie(COOKIE_USER_ID, '', max_age=0, secure=True, httponly=True, samesite="none")
-    
+
+
 @router.get("/is_logged/", response_model=UserLookup)
 def is_logged(response: Response, user_id: Optional[str] = Cookie(None), user_manager: UserManager = Depends(UserManager)):
     try:

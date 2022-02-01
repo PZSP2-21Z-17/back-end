@@ -1,16 +1,15 @@
-from typing import Optional
-from fastapi import APIRouter, Cookie, Depends, HTTPException
-from sqlalchemy.orm import Session
+from typing import List, Optional
+from fastapi import APIRouter, Cookie, Depends
+
 from src.db.managers.group_manager import GroupManager
 from src.db.managers.exceptions import ManagerError
 from src.db.managers.user_manager import UserManager
-
-from src.dependencies import get_db
 from src.db.schemas.group import Group
-from src.models.group import *
+from src.models.group import GroupCreate, GroupModel, GroupWithAnswers
 from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
+
 
 @router.post("/create/", response_model=GroupModel)
 def create(group: GroupCreate, group_manager: GroupManager = Depends(GroupManager)):
@@ -19,6 +18,7 @@ def create(group: GroupCreate, group_manager: GroupManager = Depends(GroupManage
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.get("/all/", response_model=List[GroupModel])
 def all(group_manager: GroupManager = Depends(GroupManager)):
     try:
@@ -26,6 +26,7 @@ def all(group_manager: GroupManager = Depends(GroupManager)):
         return a
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/{exam_id}/{group_nr}", response_model=GroupWithAnswers)
 def one(
@@ -42,6 +43,7 @@ def one(
         return a
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/answers/{exam_id}/{group_nr}", response_model=GroupWithAnswers)
 def answers(exam_id: int, group_nr: int, group_manager: GroupManager = Depends(GroupManager)):

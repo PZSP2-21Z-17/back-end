@@ -1,8 +1,8 @@
 from datetime import datetime
 from time import mktime, strptime
 from sqlalchemy.orm.session import Session
-from src.db.database import databaseSessionMaker
 
+from src.db.database import databaseSessionMaker
 from .schemas.user import User
 from .schemas.subject import Subject
 from .schemas.exam import Exam
@@ -12,22 +12,24 @@ from .schemas.answer import Answer
 from .schemas.tag import Tag
 from .schemas.tag_aff import TagAffiliation
 from .schemas.task_aff import TaskAffiliation
-from random import randint, random
 
 PLACEHOLDERS = 30
 
-def date_lerp(min, max, t, fmt = '%d-%m-%Y'):
+
+def date_lerp(min, max, t, fmt='%d-%m-%Y'):
     min = mktime(strptime(min, fmt))
     max = mktime(strptime(max, fmt))
     return datetime.fromtimestamp(min + (max - min) * t)
+
 
 def fill():
     db: Session = databaseSessionMaker()
     # Add to database here
 
-
-
+    #
     # Users
+    #
+
     uuids = [
         '0b851b8b-2dfe-452b-9e06-968700cbbc72',
         'e6912348-3270-422d-814f-e516b1af600a',
@@ -45,9 +47,10 @@ def fill():
         db_user = User(**dict(zip(user_fields, [uuid, *d])))
         db.add(db_user)
 
-
-
+    #
     # Subject
+    #
+
     subject_fields = ['subject_code', 'name']
     subject_data = [
         ['PLHD', 'Placeholder'],
@@ -65,9 +68,10 @@ def fill():
         db_subject = Subject(**dict(zip(subject_fields, d)))
         db.add(db_subject)
 
-
-
+    #
     # Exams
+    #
+
     exam_fields = ['date_of_exam', 'content', 'description', 'author_id']
     exam_data = [
         [datetime.strptime('04-12-2021', '%d-%m-%Y'), 'Exam 1', 'Literature, history, religion and geography', uuids[2]],
@@ -77,9 +81,10 @@ def fill():
         db_exam = Exam(**dict(zip(exam_fields, d)))
         db.add(db_exam)
 
-
-
+    #
     # Groups
+    #
+
     group_fields = ['exam_id', 'group_nr']
     group_data = [
         ['1', '1'],
@@ -91,7 +96,9 @@ def fill():
         db_group = Group(**dict(zip(group_fields, d)))
         db.add(db_group)
 
-
+    #
+    # Tasks
+    #
 
     task_fields = ['content', 'date_creation', 'is_visible', 'subject_code', 'author_id']
     task_data = [
@@ -100,15 +107,15 @@ def fill():
         ["Jake had __4__ chocolates. He ate __1__. How many does he have __now__?", 'MATH', uuids[1]],
         ["A brick weights 1 kg and 1/2 of a brick. How much does a brick weight?", 'MATH', uuids[1]],
         ["What does '*memento mori*' mean?", 'LIT', uuids[2]],
-        ["Who discovered **America**?",'HIS', uuids[2]],
+        ["Who discovered **America**?", 'HIS', uuids[2]],
         ["How many animals did Moses bring into The Arc?", 'REL', uuids[2]],
         ["What does '*DevOps*' mean?", 'IT', uuids[1]],
-        ["What does '*ORM*' stand for?", 'IT' , uuids[1]],
+        ["What does '*ORM*' stand for?", 'IT', uuids[1]],
         ["Where is the country of Bhutan?", 'GEO', uuids[3]],
         ["What equation is *Albert Einstein* known for?", 'PHYS', uuids[1]],
         ["What's the equation of position over time?", 'PHYS', uuids[1]],
         ["Find the area of the red triangle. ![image](https://d138zd1ktt9iqe.cloudfront.net/media/seo_landing_files/red-triangle-1606299717.png)", 'MATH', uuids[2]],
-	    ["Is that Joseph Pilsudski? <br><img src='https://upload.wikimedia.org/wikipedia/commons/3/3b/Jozef_Pilsudski1.jpg' alt='drawing' width='200'/>",'HIS', uuids[3]],
+        ["Is that Joseph Pilsudski? <br><img src='https://upload.wikimedia.org/wikipedia/commons/3/3b/Jozef_Pilsudski1.jpg' alt='drawing' width='200'/>", 'HIS', uuids[3]],
         ["What's radius of circle with circumference 2*pi?", 'MATH', uuids[1]],
         ["Add 8.563 and 4.8292.", 'MATH', uuids[1]],
         ["I am an odd number. Take away one letter and I become even. What number am I?", 'MATH', uuids[1]],
@@ -129,10 +136,10 @@ def fill():
         ["Current Prime Minister of the UK.", 'HIS', uuids[3]],
         ["Is Chile in South America", 'GEO', uuids[3]],
         ["What is the product of this code: \n```py\na = 7 - 2\nprint(a)\n```", 'IT', uuids[1]],
-        ["What started the great Chicago fire of 1871?",'HIS', uuids[3]],
-        ["The United States bought Alaska from which country?",'HIS', uuids[3]],
-        ["Which of the presidents is not on Mount Rushmore?",'HIS', uuids[3]],
-        ["What is the best-selling novel of all time?",'HIS', uuids[3]]
+        ["What started the great Chicago fire of 1871?", 'HIS', uuids[3]],
+        ["The United States bought Alaska from which country?", 'HIS', uuids[3]],
+        ["Which of the presidents is not on Mount Rushmore?", 'HIS', uuids[3]],
+        ["What is the best-selling novel of all time?", 'HIS', uuids[3]]
     ]
     for _ in range(PLACEHOLDERS):
         task_data.append(["Placeholder.", 'PLHD', uuids[0]])
@@ -141,14 +148,15 @@ def fill():
     [task_contents, task_subject_code, task_author_id] = [list(e) for e in zip(*task_data)]
     task_date_creation = [date_lerp('01-10-2019', '01-12-2021', i / (task_count - 1)) for i in range(task_count)]
     task_is_visible = ['N' if i in (0, 1, 2, 6, 9) else 'Y' for i in range(task_count)]
-    
+
     for d in zip(task_contents, task_date_creation, task_is_visible, task_subject_code, task_author_id):
         db_task = Task(**dict(zip(task_fields, d)))
         db.add(db_task)
 
-
-
+    #
     # Answers
+    #
+
     answer_fields = ['task_id', 'content', 'is_correct']
     answer_data = [
         [
@@ -355,9 +363,10 @@ def fill():
             db_answer = Answer(**dict(zip(answer_fields, [task_id, content, is_correct])))
             db.add(db_answer)
 
-
-
+    #
     # Tags
+    #
+
     tag_fields = ['name']
     tag_data = [
         'difficulty easy',
@@ -375,9 +384,10 @@ def fill():
         db_tag = Tag(**dict(zip(tag_fields, [d])))
         db.add(db_tag)
 
-
-
+    #
     # Tag Affiliations
+    #
+
     tag_aff_fields = ['task_id', 'tag_id']
     tag_aff_data = [
         [1, 6],
@@ -393,7 +403,7 @@ def fill():
         [2, 6],
         [1, 5],
         [1, 6],
-	    [2, 4, 5, 8],
+        [2, 4, 5, 8],
         [1, 6],
         [1, 6],
         [2, 5, 8],
@@ -427,9 +437,10 @@ def fill():
             db_tag = TagAffiliation(**dict(zip(tag_aff_fields, [task_id, tag_id])))
             db.add(db_tag)
 
-
-
+    #
     # Task Affiliations
+    #
+
     task_aff_fields = ['exam_id', 'group_nr', 'nr_on_sheet', 'task_id']
     task_aff_data = [
         (1, [
@@ -443,12 +454,13 @@ def fill():
     ]
     for (exam_id, group_nrs) in task_aff_data:
         for (group_nr, task_ids) in group_nrs:
-            for (nr_on_sheet, task_id) in zip(range(1, len(task_ids)+1), task_ids):
+            for (nr_on_sheet, task_id) in zip(range(1, len(task_ids) + 1), task_ids):
                 db_task = TaskAffiliation(**dict(zip(task_aff_fields, [exam_id, group_nr, nr_on_sheet, task_id])))
                 db.add(db_task)
 
-
-
+    #
     # Enough.
+    #
+
     db.commit()
     db.close()

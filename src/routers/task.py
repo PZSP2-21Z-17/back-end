@@ -1,14 +1,18 @@
 from typing import List, Optional
 from fastapi import APIRouter, Cookie, Depends, Query
+
 from src.db.managers.task_manager import TaskManager
 from src.db.managers.exceptions import ManagerError
 from src.db.managers.user_manager import UserManager
-
 from src.db.schemas.task import Task
-from src.models.task import *
+from src.models.task import (
+    SearchTip, TaskBase, TaskCreate, TaskCreateWithTagsAnswers, TaskModel,
+    TaskWithAnswers, TaskWithAnswersTagsSubject, TaskWithAnswersTagsSubjectUsage
+)
 from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
+
 
 @router.post("/create/", response_model=TaskModel)
 def create(
@@ -25,6 +29,7 @@ def create(
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.get("/all/", response_model=List[TaskModel])
 def all(
     task_manager: TaskManager = Depends(TaskManager),
@@ -38,6 +43,7 @@ def all(
         return a
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/one/{task_id}", response_model=TaskModel)
 def one(
@@ -53,6 +59,7 @@ def one(
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.post("/delete/", response_model=None)
 def delete(
     task: TaskBase,
@@ -66,6 +73,7 @@ def delete(
         return task_manager.delete(user_id, task)
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.post("/update/", response_model=TaskModel)
 def update(
@@ -96,6 +104,7 @@ def one_with_answers(
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.get("/all_with_answers/", response_model=List[TaskWithAnswers])
 def all_with_answers(
     task_manager: TaskManager = Depends(TaskManager),
@@ -108,6 +117,7 @@ def all_with_answers(
         return task_manager.all_with_answers(user_id)
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.post("/create_with_answers/", response_model=TaskWithAnswersTagsSubject)
 def create_with_answers(
@@ -125,6 +135,7 @@ def create_with_answers(
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.get("/find", response_model=List[TaskWithAnswersTagsSubjectUsage])
 def find(
     tags: List[int] = Query([]),
@@ -141,6 +152,7 @@ def find(
         return task_manager.find(user_id, tags, search_string, subject_code, offset)
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/search_tips", response_model=List[SearchTip])
 def search_tips(

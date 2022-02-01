@@ -1,15 +1,14 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends
+
 from src.db.managers.answer_manager import AnswerManager
 from src.db.managers.exceptions import ManagerError
-
-from src.dependencies import get_db
 from src.db.schemas.answer import Answer
-from src.models.answer import *
+from src.models.answer import AnswerCreate, AnswerModel
 from src.routers.exceptions import HTTPUnauthorized
 
 router = APIRouter()
+
 
 @router.post("/create/", response_model=AnswerModel)
 def create(answer: AnswerCreate, answer_manager: AnswerManager = Depends(AnswerManager)):
@@ -18,6 +17,7 @@ def create(answer: AnswerCreate, answer_manager: AnswerManager = Depends(AnswerM
     except ManagerError:
         raise HTTPUnauthorized()
 
+
 @router.get("/all/", response_model=List[AnswerModel])
 def all(answer_manager: AnswerManager = Depends(AnswerManager)):
     try:
@@ -25,6 +25,7 @@ def all(answer_manager: AnswerManager = Depends(AnswerManager)):
         return a
     except ManagerError:
         raise HTTPUnauthorized()
+
 
 @router.get("/one/{answer_id}", response_model=AnswerModel)
 def one(answer_id: int, answer_manager: AnswerManager = Depends(AnswerManager)):

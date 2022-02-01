@@ -6,11 +6,11 @@ from sqlalchemy.exc import DatabaseError
 
 from src.dependencies import get_db
 from src.db.schemas.subject import Subject
-from src.models.answer import *
 from src.models.subject import SubjectBase
 
+
 class SubjectManager:
-    def __init__ (self, db: Session = Depends(get_db)):
+    def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
     def add(self, subject: Subject) -> Subject:
@@ -28,11 +28,11 @@ class SubjectManager:
             query = self.db.query(Subject.subject_code, Subject.name, Subject.tasks.any().label('in_use')).\
                 order_by(Subject.name).\
                 limit(limit).\
-                offset(limit*offset)
+                offset(limit * offset)
             return query.all()
         except DatabaseError as error:
             raise error
-    
+
     def delete(self, subject: SubjectBase):
         try:
             query = self.db.query(Subject).filter(Subject.subject_code == subject.subject_code)
@@ -47,7 +47,7 @@ class SubjectManager:
 
     def find(self, search_string: str, offset: int, limit: int = 25) -> List[Subject]:
         try:
-            query =  self.db.query(Subject).\
+            query = self.db.query(Subject).\
                 order_by(desc(func.similarity(Subject.name, search_string))).\
                 limit(limit).\
                 offset(offset * limit)

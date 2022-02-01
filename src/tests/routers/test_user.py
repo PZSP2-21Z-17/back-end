@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+
 def test_login(client: TestClient):
     data = {
         'e_mail': 'bartek@gmail.com',
@@ -7,6 +8,7 @@ def test_login(client: TestClient):
     }
     response = client.post("/user/login/", json=data)
     assert response.status_code == 200
+
 
 def test_register(client: TestClient):
     data = {
@@ -21,6 +23,7 @@ def test_register(client: TestClient):
     for key in ['e_mail', 'first_name', 'last_name']:
         assert json[key] == data[key]
     assert json.get('user_id') is not None
+
 
 def test_lookup(client: TestClient):
     response = client.get("/user/lookup/1")

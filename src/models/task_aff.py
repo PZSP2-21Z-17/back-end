@@ -1,7 +1,7 @@
-from typing import List
 from pydantic import BaseModel
 
 from .task import TaskWithAnswers
+
 
 class TaskAffiliationBase(BaseModel):
     group_nr: int
@@ -11,11 +11,14 @@ class TaskAffiliationBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class TaskAffiliationModel(TaskAffiliationBase):
     nr_on_sheet: int
 
+
 class TaskAffiliationWithAnswers(TaskAffiliationModel):
     tasks: TaskWithAnswers
+
 
 class TaskAffiliationCreate(BaseModel):
     group_nr: int

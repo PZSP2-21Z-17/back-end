@@ -5,6 +5,7 @@ from sqlalchemy.sql.sqltypes import Integer, VARCHAR, CHAR
 
 from src.db.database import BaseModel as BaseSchema
 
+
 class Answer(BaseSchema):
     __tablename__   = 'answer'
     # Main fields

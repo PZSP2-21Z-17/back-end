@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from src.db.database import BaseModel as BaseSchema
 
+
 class Task(BaseSchema):
     __tablename__   = 'task'
     # Main fields
@@ -17,11 +18,11 @@ class Task(BaseSchema):
     # Parents
     subject_code    = Column(VARCHAR(5), ForeignKey('subject.subject_code'), nullable=False)
     subject         = relationship("Subject", back_populates='tasks')
-    
+
     author_id       = Column(UUID(as_uuid=True), ForeignKey('user.user_id'), nullable=False)
     user            = relationship("User", back_populates='tasks')
 
-    # Children 
+    # Children
     task_affs       = relationship("TaskAffiliation", back_populates='tasks')
     answers         = relationship("Answer", back_populates='tasks')
     tag_affs        = relationship("TagAffiliation", back_populates='tasks')

@@ -4,6 +4,7 @@ from sqlalchemy.sql.sqltypes import VARCHAR
 
 from src.db.database import BaseModel as BaseSchema
 
+
 class Subject(BaseSchema):
     __tablename__   = 'subject'
     # Main fields

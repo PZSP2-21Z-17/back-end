@@ -1,8 +1,9 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.sqltypes import  VARCHAR, Integer
+from sqlalchemy.sql.sqltypes import VARCHAR, Integer
 
 from src.db.database import BaseModel as BaseSchema
+
 
 class Tag(BaseSchema):
     __tablename__   = 'tag'

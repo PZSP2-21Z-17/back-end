@@ -5,6 +5,7 @@ from sqlalchemy.sql.sqltypes import Integer
 
 from src.db.database import BaseModel as BaseSchema
 
+
 class Group(BaseSchema):
     __tablename__   = 'group'
     # Main fields
@@ -15,4 +16,4 @@ class Group(BaseSchema):
     exam            = relationship("Exam", back_populates='groups')
 
     # Children
-    task_affs       = relationship("TaskAffiliation",  primaryjoin="and_(Group.group_nr == TaskAffiliation.group_nr, Group.exam_id == TaskAffiliation.exam_id)", back_populates='groups')
+    task_affs       = relationship("TaskAffiliation", primaryjoin="and_(Group.group_nr == TaskAffiliation.group_nr, Group.exam_id == TaskAffiliation.exam_id)", back_populates='groups')

@@ -1,11 +1,13 @@
 from uuid import UUID
 from pydantic import BaseModel
 
+
 class UserBase(BaseModel):
     user_id: UUID
 
     class Config:
         orm_mode = True
+
 
 class UserLookup(BaseModel):
     first_name: str
@@ -15,9 +17,11 @@ class UserLookup(BaseModel):
     class Config:
         orm_mode = True
 
+
 class UserLogin(BaseModel):
     password: str
     e_mail: str
+
 
 class UserCreate(BaseModel):
     password: str

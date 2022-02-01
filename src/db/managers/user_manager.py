@@ -1,15 +1,16 @@
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DatabaseError
+from uuid import UUID
 
 from src.dependencies import get_db
 from src.db.schemas.user import User
-from src.models.user import *
+from src.models.user import UserCreate, UserLogin
+
 
 class UserManager:
-    def __init__ (self, db: Session = Depends(get_db)):
+    def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
     def register(self, user: UserCreate):
@@ -39,8 +40,7 @@ class UserManager:
 
     def is_user(self, user_id: UUID) -> bool:
         try:
-            db_user = self.db.query(User).filter(User.user_id == user_id).one()
-        except (DatabaseError, NoResultFound) as error:
+            self.db.query(User).filter(User.user_id == user_id).one()
+        except (DatabaseError, NoResultFound):
             return False
         return True
-

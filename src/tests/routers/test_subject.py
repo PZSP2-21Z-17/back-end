@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+
 def test_create(client: TestClient):
     data = {
         'subject_code': 'bab',

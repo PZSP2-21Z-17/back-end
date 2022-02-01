@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from src.db.database import BaseModel as BaseSchema
 
+
 class Exam(BaseSchema):
     __tablename__   = 'exam'
     # Main fields

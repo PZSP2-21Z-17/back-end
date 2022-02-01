@@ -1,9 +1,10 @@
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Integer, VARCHAR
+from sqlalchemy.sql.sqltypes import Integer
 
 from src.db.database import BaseModel as BaseSchema
+
 
 class TagAffiliation(BaseSchema):
     __tablename__   = 'tag_affiliation'

@@ -1,9 +1,10 @@
-from sqlalchemy import Column, func, text
+from sqlalchemy import Column, func
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.sqltypes import Integer, VARCHAR
+from sqlalchemy.sql.sqltypes import VARCHAR
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.db.database import BaseModel as BaseSchema
+
 
 class User(BaseSchema):
     __tablename__   = 'user'

@@ -1,8 +1,8 @@
 from typing import List
 from uuid import UUID
 from fastapi import Depends
-from sqlalchemy import func, select, literal_column, String, literal
-from sqlalchemy.sql import label, case, any_, desc, cast, or_
+from sqlalchemy import func, literal_column, String, literal
+from sqlalchemy.sql import label, desc, cast
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
@@ -13,11 +13,11 @@ from src.db.schemas.answer import Answer
 from src.db.schemas.tag_aff import TagAffiliation
 from src.db.schemas.tag import Tag
 from src.db.schemas.subject import Subject
-
 from src.models.task import TaskBase, TaskCreateWithTagsAnswers, TaskModel, TaskCreate
 
+
 class TaskManager:
-    def __init__ (self, db: Session = Depends(get_db)):
+    def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
     def add(self, task: Task) -> Task:
@@ -61,7 +61,7 @@ class TaskManager:
         except DatabaseError as error:
             raise error
 
-    def update(self, user_id: UUID, task:TaskModel):
+    def update(self, user_id: UUID, task: TaskModel):
         try:
             self.db.query(Task).filter(Task.task_id == task.task_id).filter(Task.author_id == user_id).update(task.dict())
             self.db.commit()
@@ -101,7 +101,7 @@ class TaskManager:
             self.db.rollback()
             raise error
         return db_task
-    
+
     def find(self, user_id: UUID, tags: List[int], search_string: str = None, subject_code: str = None, offset: int = 0, limit: int = 25):
         try:
             query = self.db.query(Task, label('in_use', (Task.author_id != user_id) | (Task.task_affs.any()))).\
@@ -118,7 +118,7 @@ class TaskManager:
                 query = query.\
                     filter(func.similarity(Task.content, search_string) > 0.001).\
                     order_by(desc(func.similarity(Task.content, search_string)))
-            query = query.limit(limit).offset(offset*limit)
+            query = query.limit(limit).offset(offset * limit)
             return query.all()
         except DatabaseError as error:
             raise error
@@ -139,7 +139,7 @@ class TaskManager:
                 filter(func.similarity(literal_column('name'), search_string) > 0.001).\
                 order_by(desc(func.similarity(literal_column('name'), search_string))).\
                 limit(limit).\
-                offset(offset*limit)
+                offset(offset * limit)
             return query.all()
         except DatabaseError as error:
             raise error

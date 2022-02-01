@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .db.schemas import *
 from .db.database import BaseModel, database
 from .db import dummy
-from .routers import *
+from .routers import answer, exam, group, subject, tag_aff, tag, task, user
 
 BaseModel.metadata.drop_all(bind=database)
 BaseModel.metadata.create_all(bind=database)
