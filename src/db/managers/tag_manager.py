@@ -36,12 +36,10 @@ class TagManager:
     def delete(self, tag: TagBase):
         try:
             query = self.db.query(Tag).filter(Tag.tag_id == tag.tag_id)
-            if query.filter(~Tag.tag_affs.any()).first() is not None:
-                query.delete()
-                self.db.commit()
-                return
-            else:
-                raise DatabaseError()
+            query.filter(~Tag.tag_affs.any()).one()
+            query.delete()
+            self.db.commit()
+            return
         except DatabaseError as error:
             raise error
 

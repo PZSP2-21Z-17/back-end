@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 from fastapi import APIRouter, Cookie, Depends
 
 from src.db.managers.group_manager import GroupManager
@@ -33,10 +34,10 @@ def one(
     exam_id: int,
     group_nr: int,
     group_manager: GroupManager = Depends(GroupManager),
-    user_id: Optional[str] = Cookie(None),
+    user_id: Optional[UUID] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if not user_manager.is_user(user_id):
+    if user_id is None or not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         a = group_manager.one(user_id, exam_id, group_nr)

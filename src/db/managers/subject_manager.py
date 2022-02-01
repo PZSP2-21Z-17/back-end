@@ -36,12 +36,10 @@ class SubjectManager:
     def delete(self, subject: SubjectBase):
         try:
             query = self.db.query(Subject).filter(Subject.subject_code == subject.subject_code)
-            if query.filter(~Subject.tasks.any()).first() is not None:
-                query.delete()
-                self.db.commit()
-                return
-            else:
-                raise DatabaseError()
+            query.filter(~Subject.tasks.any()).one()
+            query.delete()
+            self.db.commit()
+            return
         except DatabaseError as error:
             raise error
 

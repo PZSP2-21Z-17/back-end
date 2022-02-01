@@ -1,4 +1,5 @@
 from typing import Optional
+from uuid import UUID
 from fastapi import APIRouter, Cookie, Depends, Response
 
 from src.db.managers.user_manager import UserManager
@@ -36,10 +37,10 @@ def logout(response: Response):
 
 
 @router.get("/is_logged/", response_model=UserLookup)
-def is_logged(response: Response, user_id: Optional[str] = Cookie(None), user_manager: UserManager = Depends(UserManager)):
+def is_logged(response: Response, user_id: Optional[UUID] = Cookie(None), user_manager: UserManager = Depends(UserManager)):
     try:
         if user_id is not None:
-            response.set_cookie(COOKIE_USER_ID, user_id, max_age=CLIENT_SESSION, secure=True, httponly=True, samesite="none")
+            response.set_cookie(COOKIE_USER_ID, str(user_id), max_age=CLIENT_SESSION, secure=True, httponly=True, samesite="none")
             return user_manager.lookup(user_id)
         else:
             raise HTTPUnauthorized()

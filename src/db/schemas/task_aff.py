@@ -19,8 +19,8 @@ class TaskAffiliation(BaseSchema):
     tasks           = relationship("Task", back_populates='task_affs')
 
     __table_args__ = (
-        ForeignKeyConstraint([group_nr, exam_id], ['group.group_nr', 'group.exam_id']),
-        ForeignKeyConstraint([task_id], ['task.task_id']),
+        ForeignKeyConstraint(['group_nr', 'exam_id'], ['group.group_nr', 'group.exam_id']),
+        ForeignKeyConstraint(['task_id'], ['task.task_id']),
         PrimaryKeyConstraint(group_nr, exam_id, task_id),
         {}
     )

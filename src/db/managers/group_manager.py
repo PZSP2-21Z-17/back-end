@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import DatabaseError
@@ -29,7 +30,7 @@ class GroupManager:
             raise error
         return groups
 
-    def one(self, user_id: int, exam_id: int, group_nr: int):
+    def one(self, user_id: UUID, exam_id: int, group_nr: int):
         try:
             query = self.db.query(Group).\
                 filter(Group.exam_id == exam_id).\

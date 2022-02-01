@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 from fastapi import APIRouter, Cookie, Depends
 from typing import List, Optional
 
@@ -16,10 +17,10 @@ router = APIRouter()
 def create(
     exam: ExamCreate,
     exam_manager: ExamManager = Depends(ExamManager),
-    user_id: Optional[str] = Cookie(None),
+    user_id: Optional[UUID] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if not user_manager.is_user(user_id):
+    if user_id is None or not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
 
     exam.author_id = user_id
@@ -32,10 +33,10 @@ def create(
 @router.get("/all/", response_model=List[ExamWithGroups])
 def all(
     exam_manager: ExamManager = Depends(ExamManager),
-    user_id: Optional[str] = Cookie(None),
+    user_id: Optional[UUID] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if not user_manager.is_user(user_id):
+    if user_id is None or not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
 
     try:
@@ -49,10 +50,10 @@ def all(
 def groups(
     exam_id: int,
     exam_manager: ExamManager = Depends(ExamManager),
-    user_id: Optional[str] = Cookie(None),
+    user_id: Optional[UUID] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if not user_manager.is_user(user_id):
+    if user_id is None or not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
 
     try:
@@ -65,10 +66,10 @@ def groups(
 def delete(
     exam: ExamBase,
     exam_manager: ExamManager = Depends(ExamManager),
-    user_id: Optional[str] = Cookie(None),
+    user_id: Optional[UUID] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if not user_manager.is_user(user_id):
+    if user_id is None or not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
     try:
         return exam_manager.delete(user_id, exam)
@@ -80,10 +81,10 @@ def delete(
 def generate(
     exam_generate: ExamGenerate,
     exam_manager: ExamManager = Depends(ExamManager),
-    user_id: Optional[str] = Cookie(None),
+    user_id: Optional[UUID] = Cookie(None),
     user_manager: UserManager = Depends(UserManager)
 ):
-    if not user_manager.is_user(user_id):
+    if user_id is None or not user_manager.is_user(user_id):
         raise HTTPUnauthorized()
 
     exam_generate.author_id = user_id
