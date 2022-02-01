@@ -1,8 +1,6 @@
+coverage==6.1.2
 fastapi==0.70.0
+psycopg2-binary==2.9.3
+pytest==6.2.5
 SQLAlchemy==1.4.27
 uvicorn==0.15.0
-pytest==6.2.5
-coverage==6.1.2
-psycopg2-binary==2.9.3
-uvloop>=0.14.0
-httptools==0.1.0
